@@ -1,7 +1,7 @@
 <template>
     <div>
         <el-row :gutter="20">
-            <el-col :span="8">
+            <!-- <el-col :span="8">
                 <el-card shadow="hover" class="mgb20" style="height:252px;">
                     <div class="user-info">
                         <img src="static/img/img.jpg" class="user-avator" alt="">
@@ -26,16 +26,16 @@
                     HTML
                     <el-progress :percentage="0.9" color="#f56c6c"></el-progress>
                 </el-card>
-            </el-col>
-            <el-col :span="16">
+            </el-col> -->
+            <el-col :span="24">
                 <el-row :gutter="20" class="mgb20">
                     <el-col :span="8">
                         <el-card shadow="hover" :body-style="{padding: '0px'}">
                             <div class="grid-content grid-con-1">
-                                <i class="el-icon-lx-people grid-con-icon"></i>
+                                <i class="el-icon-jpdn-kehuguanli grid-con-icon"></i>
                                 <div class="grid-cont-right">
                                     <div class="grid-num">1234</div>
-                                    <div>用户访问量</div>
+                                    <div>客户数量</div>
                                 </div>
                             </div>
                         </el-card>
@@ -66,7 +66,7 @@
                 <el-card shadow="hover" style="height:403px;">
                     <div slot="header" class="clearfix">
                         <span>待办事项</span>
-                        <el-button style="float: right; padding: 3px 0" type="text">添加</el-button>
+                        <!-- <el-button style="float: right; padding: 3px 0" type="text">添加</el-button> -->
                     </div>
                     <el-table :data="todoList" :show-header="false" height="304" style="width: 100%;font-size:14px;">
                         <el-table-column width="40">
@@ -79,28 +79,28 @@
                                 <div class="todo-item" :class="{'todo-item-del': scope.row.status}">{{scope.row.title}}</div>
                             </template>
                         </el-table-column>
-                        <el-table-column width="60">
+                        <!-- <el-table-column width="60">
                             <template slot-scope="scope">
                                 <i class="el-icon-edit"></i>
                                 <i class="el-icon-delete"></i>
                             </template>
-                        </el-table-column>
+                        </el-table-column> -->
                     </el-table>
                 </el-card>
             </el-col>
         </el-row>
-        <el-row :gutter="20">
-            <el-col :span="12">
-                <el-card shadow="hover">
-                    <schart ref="bar" class="schart" canvasId="bar" :data="data" type="bar" :options="options"></schart>
-                </el-card>
-            </el-col>
-            <el-col :span="12">
-                <el-card shadow="hover">
-                    <schart ref="line" class="schart" canvasId="line" :data="data" type="line" :options="options2"></schart>
-                </el-card>
-            </el-col>
-        </el-row>
+ <!--        <el-row :gutter="20">
+     <el-col :span="12">
+         <el-card shadow="hover">
+             <schart ref="bar" class="schart" canvasId="bar" :data="data" type="bar" :options="options"></schart>
+         </el-card>
+     </el-col>
+     <el-col :span="12">
+         <el-card shadow="hover">
+             <schart ref="line" class="schart" canvasId="line" :data="data" type="line" :options="options2"></schart>
+         </el-card>
+     </el-col>
+ </el-row> -->
     </div>
 </template>
 
@@ -192,14 +192,14 @@
             }
         },
         created(){
-            this.handleListener();
+            //this.handleListener();
             this.changeDate();
         },
         activated(){
-            this.handleListener();
+            //this.handleListener();
         },
         deactivated(){
-            window.removeEventListener('resize', this.renderChart);
+            //window.removeEventListener('resize', this.renderChart);
             bus.$off('collapse', this.handleBus);
         },
         methods: {
@@ -209,21 +209,21 @@
                     const date = new Date(now - (6 - index) * 86400000);
                     item.name = `${date.getFullYear()}/${date.getMonth()+1}/${date.getDate()}`
                 })
-            },
+            }/*,
             handleListener(){
                 bus.$on('collapse', this.handleBus);
                 // 调用renderChart方法对图表进行重新渲染
-                window.addEventListener('resize', this.renderChart)
+                //window.addEventListener('resize', this.renderChart)
             },
             handleBus(msg){
                 setTimeout(() => {
-                    this.renderChart()
+                    //this.renderChart()
                 }, 300);
             },
             renderChart(){
                 this.$refs.bar.renderChart();
                 this.$refs.line.renderChart();
-            }
+            }*/
         }
     }
 
