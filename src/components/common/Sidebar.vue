@@ -39,24 +39,20 @@
                 collapse: false,
                 items: [
                     {
-                        icon: 'el-icon-lx-home',
+                        icon: 'el-icon-jpdn-shouye',
                         index: 'dashboard',
                         title: '系统首页'
                     },
+                    
                     {
-                        icon: 'el-icon-lx-cascades',
-                        index: 'table',
-                        title: '基础表格'
-                    },
-                    {
-                        icon: 'el-icon-lx-copy',
+                        icon: 'el-icon-jpdn-kehuguanli',
                         index: 'tabs',
-                        title: 'tab选项卡'
+                        title: '客户管理'
                     },
                     {
-                        icon: 'el-icon-lx-calendar',
+                        icon: 'el-icon-jpdn-hetongguanli',
                         index: '3',
-                        title: '表单相关',
+                        title: '合同管理',
                         subs: [
                             {
                                 index: 'form',
@@ -83,44 +79,14 @@
                         ]
                     },
                     {
-                        icon: 'el-icon-lx-emoji',
+                        icon: 'el-icon-jpdn-order',
+                        index: 'table',
+                        title: '工单管理'
+                    },
+                    {
+                        icon: 'el-icon-jpdn-huiyuanguanli',
                         index: 'icon',
-                        title: '自定义图标'
-                    },
-                    {
-                        icon: 'el-icon-lx-favor',
-                        index: 'charts',
-                        title: 'schart图表'
-                    },
-                    {
-                        icon: 'el-icon-rank',
-                        index: '6',
-                        title: '拖拽组件',
-                        subs: [
-                            {
-                                index: 'drag',
-                                title: '拖拽列表',
-                            },
-                            {
-                                index: 'dialog',
-                                title: '拖拽弹框',
-                            }
-                        ]
-                    },
-                    {
-                        icon: 'el-icon-lx-warn',
-                        index: '7',
-                        title: '错误处理',
-                        subs: [
-                            {
-                                index: 'permission',
-                                title: '权限测试'
-                            },
-                            {
-                                index: '404',
-                                title: '404页面'
-                            }
-                        ]
+                        title: '实施员管理'
                     }
                 ]
             }

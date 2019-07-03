@@ -127,7 +127,7 @@
                     this.url = './static/vuetable.json';
                 };
                 
-                this.$axios.post(this.url, {
+                this.$axios.get(this.url, {
                     page: this.cur_page
                 }).then((res) => {
                     this.tableData = res.data.list;
