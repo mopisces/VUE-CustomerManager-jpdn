@@ -46,8 +46,18 @@
                     
                     {
                         icon: 'el-icon-jpdn-kehuguanli',
-                        index: 'tabs',
-                        title: '客户管理'
+                        index: 'customer',
+                        title: '客户管理',
+                        subs:[
+                            {
+                                index:'cusManage',
+                                title: '客户列表'
+                            },
+                            {
+                                index:'cusCreate',
+                                title:'添加客户'
+                            }
+                        ]
                     },
                     {
                         icon: 'el-icon-jpdn-hetongguanli',
@@ -55,38 +65,62 @@
                         title: '合同管理',
                         subs: [
                             {
-                                index: 'form',
-                                title: '基本表单'
-                            },
-                            {
                                 index: '3-2',
-                                title: '三级菜单',
+                                title: '合同审核',
                                 subs: [
                                     {
                                         index: 'editor',
-                                        title: '富文本编辑器'
+                                        title: '销售合同'
                                     },
                                     {
                                         index: 'markdown',
-                                        title: 'markdown编辑器'
+                                        title: '维护合同'
                                     },
+                                    {
+                                        index: 'markdown',
+                                        title: '增值合同'
+                                    },
+                                    {
+                                        index: 'markdown',
+                                        title: 'webapp合同'
+                                    }
                                 ]
                             },
                             {
-                                index: 'upload',
-                                title: '文件上传'
+                                index: 'contractCreate',
+                                title: '添加合同',
                             }
                         ]
                     },
                     {
                         icon: 'el-icon-jpdn-order',
                         index: 'table',
-                        title: '工单管理'
+                        title: '服务单管理',
+                        subs:[
+                            {
+                                index:'serviceManage',
+                                title:'服务单汇总'
+                            },
+                            {
+                                index:'serviceCreate',
+                                title:'新增服务单'
+                            }
+                        ]
                     },
                     {
                         icon: 'el-icon-jpdn-huiyuanguanli',
                         index: 'icon',
-                        title: '实施员管理'
+                        title: '管理员',
+                        subs:[
+                                {
+                                    index: 'engrManage',
+                                    title: '管理员列表'
+                                },
+                                {
+                                    index: 'engrCreate',
+                                    title: '添加管理员'
+                                },
+                        ]
                     }
                 ]
             }

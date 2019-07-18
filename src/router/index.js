@@ -91,6 +91,46 @@ export default new Router({
                     path: '/403',
                     component: resolve => require(['../components/page/403.vue'], resolve),
                     meta: { title: '403' }
+                },
+                {
+                    path:'/cusManage',
+                    component: resolve => require(['../components/page/CusManage/CusManagement.vue'], resolve),
+                    meta: { title: '客户列表' }
+                },
+                {
+                    path:'/cusEdit',
+                    component: resolve => require(['../components/page/CusManage/CusEdit.vue'], resolve),
+                    meta: { title: '客户编辑' }
+                },
+                {
+                    path:'/cusCreate',
+                    component: resolve => require(['../components/page/CusManage/CusCreate.vue'], resolve),
+                    meta: { title: '添加客户' }
+                },
+                {
+                    path:'/engrManage',
+                    component: resolve => require(['../components/page/EngrManage/EngrManagement.vue'], resolve),
+                    meta:{ title:'管理员列表' }
+                },
+                {
+                    path:'/engrCreate',
+                    component: resolve => require(['../components/page/EngrManage/EngrCreate.vue'], resolve),
+                    meta:{ title:'添加管理员' }
+                },
+                {
+                    path:'/serviceManage',
+                    component: resolve => require(['../components/page/ServiceManage/ServiceManagement.vue'], resolve),
+                    meta:{ title:'服务单列表' }
+                },
+                {
+                    path:'/serviceCreate',
+                    component: resolve => require(['../components/page/ServiceManage/ServiceCreate.vue'], resolve),
+                    meta:{ title:'新增服务单' }
+                },
+                {
+                    path:'/contractCreate',
+                    component: resolve => require(['../components/page/ContractManage/ContractCreate.vue'], resolve),
+                    meta:{ title:'添加合同' }
                 }
             ]
         },
