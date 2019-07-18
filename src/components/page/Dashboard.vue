@@ -108,79 +108,35 @@
     import Schart from 'vue-schart';
     import bus from '../common/bus';
     export default {
-        name: 'dashboard',
         data() {
             return {
                 name: localStorage.getItem('ms_username'),
-                todoList: [{
-                        title: '今天要修复100个bug',
+                todoList: [
+                    {
+                        title: 'LP2019-X001-2019071801要合同到期了',
                         status: false,
                     },
                     {
-                        title: '今天要修复100个bug',
+                        title: 'LP2019-X001-2019071801合同需要审核',
+                        status: false,
+                    },
+                     {
+                        title: 'LP2019-X001-2019071801要合同到期了',
                         status: false,
                     },
                     {
-                        title: '今天要写100行代码加几个bug吧',
-                        status: false,
-                    }, {
-                        title: '今天要修复100个bug',
+                        title: 'LP2019-X001-2019071801合同需要审核',
                         status: false,
                     },
                     {
-                        title: '今天要修复100个bug',
+                        title: 'LP2019-X001-2019071801要合同到期了',
                         status: true,
                     },
                     {
-                        title: '今天要写100行代码加几个bug吧',
+                        title: 'LP2019-X001-2019071801合同需要审核',
                         status: true,
-                    }
+                    },
                 ],
-                data: [{
-                        name: '2018/09/04',
-                        value: 1083
-                    },
-                    {
-                        name: '2018/09/05',
-                        value: 941
-                    },
-                    {
-                        name: '2018/09/06',
-                        value: 1139
-                    },
-                    {
-                        name: '2018/09/07',
-                        value: 816
-                    },
-                    {
-                        name: '2018/09/08',
-                        value: 327
-                    },
-                    {
-                        name: '2018/09/09',
-                        value: 228
-                    },
-                    {
-                        name: '2018/09/10',
-                        value: 1065
-                    }
-                ],
-                options: {
-                    title: '最近七天每天的用户访问量',
-                    showValue: false,
-                    fillColor: 'rgb(45, 140, 240)',
-                    bottomPadding: 30,
-                    topPadding: 30
-                },
-                options2: {
-                    title: '最近七天用户访问趋势',
-                    fillColor: '#FC6FA1',
-                    axisColor: '#008ACD',
-                    contentColor: '#EEEEEE',
-                    bgColor: '#F5F8FD',
-                    bottomPadding: 30,
-                    topPadding: 30
-                }
             }
         },
         components: {

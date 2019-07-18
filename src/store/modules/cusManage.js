@@ -1,6 +1,6 @@
 const cusManage = {
 	state:{
-		 text: 'moduleA',
+		text: 'cusManage',
 	}
 };
 export default cusManage;

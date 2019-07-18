@@ -18,8 +18,10 @@
                     </el-row>
                     <el-row>
                        <el-col :span="24">
-                            <el-form-item label="合同编号" prop="contract_id">
-                                <el-cascader placeholder="选择合同编号" filterable :options="contractNo"  v-model="form.contract_id" @change="change"></el-cascader>
+                            <el-form-item label="合同类型" prop="contract_id">
+                                <el-select v-model="form.contract_id" placeholder="选择合同类型">
+                                    <el-option v-for="(item,index) in contractType " :key="`opt_${index}`" :label="item.label" :value="item.value"></el-option>
+                                </el-select>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -93,42 +95,22 @@
                         label: '上海' 
                     },
                 ],
-                contractNo:[
+                contractType:[
                     {
-                        value: '0',
                         label:'销售合同',
-                        children:[
-                            {
-                                value: '123456',
-                                label:'123456'
-                            },
-                            {
-                                value: '123123',
-                                label:'123123'
-                            }
-                        ]
+                        value:'0'
                     },
                     {
-                        value: '1',
                         label:'维护合同',
-                        children:[
-                            {
-                                value:'1234567',
-                                label:'1234567'
-                            },
-                            {
-                                value:'12344321',
-                                label:'12344321'
-                            }
-                        ]
+                        value:'1'
                     },
                     {
-                        value: '2',
-                        label:'增值合同'
+                        label:'增值合同',
+                        value:'2'
                     },
                     {
-                        value: '3',
-                        label:'webapp合同'
+                        label:'webapp合同',
+                        value:'3'
                     }
                 ],
                 submitBottom:{
@@ -155,12 +137,10 @@
                         { type: 'date', required: true, message: '请选择签订日期', trigger: ['blur', 'change']  }
                     ],
                     contract_amt:[
-                        { required: true, message: '请输入合同金额', trigger: 'blur' },
-                        { type: 'number', message: '合同金额必须为数字'}
+                        { required: true, validator: this.checkNum , trigger: 'blur'  },
                     ],
                     contract_agree_amt:[
                         { required: true, message: '请输入合同约定金额', trigger: 'blur' },
-                        { type: 'number', message: '合同约定金额必须为数字'}
                     ],
                     contract_begin_date:[
                         { type: 'date', required: true, message: '请选择合同开始日期', trigger: ['blur', 'change'] }
@@ -186,6 +166,15 @@
             },
             change(value){
                 console.dir(value);
+            },
+            checkNum(rule, value, callback){
+                if(!value){
+                    return callback(new Error('请输入金额'));
+                }
+                if(!(/^[0-9]+$/).test(value)){
+                    return callback(new Error('金额必须为数字'));
+                }
+                callback();
             },
         }
     }

@@ -3,204 +3,168 @@
         <div class="crumbs">
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>服务单管理</el-breadcrumb-item>
-                <el-breadcrumb-item>服务单汇总</el-breadcrumb-item>
+                <el-breadcrumb-item>服务单列表</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
         <div class="container">
             <div class="handle-box">
-                <el-input v-model="select_word" placeholder="筛选关键词" class="handle-input mr10"></el-input>
+                <el-select v-model="searchSetting.searchData.select_cate" placeholder="字段名称" class="handle-select mr10">
+                    <el-option :label="items.label" :value="items.value" v-for="(items,indexs) in searchSetting.options" :key="`opt_${indexs}`"></el-option>
+                </el-select>
+                <el-input v-model="searchSetting.searchData.select_word" placeholder="筛选关键词" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="search" @click="search">搜索</el-button>
             </div>
-            <el-table :data="data" border class="table" ref="cusManageTab"  style="width:100%;" :highlight-current-row="status.highlight"  id="container" row-key="id" :summary-method="getSummaries" show-summary>
-                <el-table-column :prop="item.prop" :label="item.label" width="235" v-for="(item,index) in items" :key="`col_${index}`" :resizable="false">
-                    <template slot-scope="scope" slot="header">
-                        <el-input v-model="searchHeader" placeholder="输入关键字搜索" :key="`input_${index}`"/>
+            <el-table :data="tableSetting.tableData" border class="table" ref="serviceManageTab"  style="width:100%;" :highlight-current-row="status.highlight"  row-key="id"  :default-sort = "{prop: 'service_begin_date', order: 'descending'}">
+                <el-table-column prop="cus_name" label="客户名称"  width="150" fixed></el-table-column>
+                <el-table-column prop="contract_id" label="合同编号"  width="235" fixed></el-table-column>
+                <el-table-column prop="service_id" label="服务单编号"  width="180" fixed></el-table-column>
+                <el-table-column prop="staff_name" label="实施员名称"  width="150" fixed="right"></el-table-column>
+                <el-table-column prop="service_type" label="实施类型"  width="100"  :formatter="serviceType" :filters="tableSetting.serviceTypeFilters" :filter-method="serviceTypeFilterTag" filter-placement="bottom-end"></el-table-column>
+                <el-table-column prop="service_begin_date" label="实施日期"  width="150" sortable></el-table-column>
+                <el-table-column prop="service_end_date" label="结束日期"  width="150" sortable></el-table-column>
+                <el-table-column prop="service_remark" label="服务内容"  width="235"></el-table-column>
+                <!-- <el-table-column align="center" label="操作">
+                    <template slot-scope="scope">
+                        <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
+                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                     </template>
-                </el-table-column>
-               <el-table-column label="操作" width="180" align="center">
-                   <template slot-scope="scope">
-                       <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                       <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-                   </template>
-               </el-table-column>
+                </el-table-column> -->
             </el-table>
             <div class="pagination">
-                <el-pagination background @current-change="handleCurrentChange" layout="prev, pager, next" :total="1000">
+                <el-pagination background @current-change="handleCurrentChange" layout="prev, pager, next" :total="tableSetting.totalPage">
                 </el-pagination>
             </div>
         </div>
 
         <!-- 编辑弹出框 -->
-        <el-dialog title="编辑" :visible.sync="editVisible" width="30%">
-            <el-form ref="form" :model="form" label-width="50px">
-                <el-form-item label="日期">
-                    <el-date-picker type="date" placeholder="选择日期" v-model="form.date" value-format="yyyy-MM-dd" style="width: 100%;"></el-date-picker>
-                </el-form-item>
-                <el-form-item label="姓名">
-                    <el-input v-model="form.name"></el-input>
-                </el-form-item>
-                <el-form-item label="地址">
-                    <el-input v-model="form.address"></el-input>
-                </el-form-item>
-        
+        <!-- <el-dialog title="编辑" :visible.sync="status.editVisible" width="30%">
+            <el-form  ref="editForm" :model="editForm" label-width="100px" :rules="rules">
+                <el-row>
+                    <el-col :span="15">
+                        <el-form-item label="管理员姓名">
+                            <el-input v-model.trim="editForm.staff_realname" maxlength="10" show-word-limit></el-input>
+                        </el-form-item>       
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="15">
+                        <el-form-item label="登录名称">
+                            <el-input v-model.trim="editForm.staff_name"></el-input>
+                        </el-form-item>       
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="15">
+                        <el-form-item label="登录密码" prop="staff_pwd">
+                            <el-input v-model.trim="editForm.staff_pwd"></el-input>
+                        </el-form-item>      
+                    </el-col>
+                </el-row>
+                <el-row v-if="editSetting.showConfirmInput">
+                    <el-col :span="15">
+                        <el-form-item label="确认密码" prop="confirm_pwd" > 
+                            <el-input v-model.trim="editForm.confirm_pwd"></el-input>
+                        </el-form-item>      
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="15">
+                        <el-form-item label="请选择权限" prop="role_name">
+                            <el-select v-model.trim="editForm.role_name" placeholder="请选择权限分组">
+                                <el-option v-for="item in editSetting.authority" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                
             </el-form>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="editVisible = false">取 消</el-button>
+                <el-button @click="status.editVisible = false">取 消</el-button>
                 <el-button type="primary" @click="saveEdit">确 定</el-button>
             </span>
-        </el-dialog>
+        </el-dialog> -->
 
         <!-- 删除提示框 -->
-       <el-dialog title="提示" :visible.sync="delVisible" width="300px" center>
+       <!-- <el-dialog title="提示" :visible.sync="status.delVisible" width="300px" center>
             <div class="del-dialog-cnt">删除不可恢复，是否确定删除？</div>
             <span slot="footer" class="dialog-footer">
-                <el-button @click="delVisible = false">取 消</el-button>
+                <el-button @click="status.delVisible = false">取 消</el-button>
                 <el-button type="primary" @click="deleteRow">确 定</el-button>
             </span>
-        </el-dialog>
+        </el-dialog> -->
     </div>
 </template>
 
 <script>
     export default {
-        name: 'basetable',
         data() {
             return {
-                searchHeader:'',
-                url: './static/vuetable.json',
-                tableData: [],
-                subTableData:[],
-                cur_page: 1,
-                multipleSelection: [],
-                select_cate: '',
-                select_word: '',
-                del_list: [],
-                is_search: false,
-                editVisible: false,
-                delVisible: false,
-                form: {
-                    name: '',
-                    date: '',
-                    address: ''
+                tableSetting:{
+                    tableData:[
+                        {
+                            cus_name:'重庆永利',
+                            contract_id:'LP2019-X001-2019071801',
+                            service_id:'20190701010102',
+                            staff_name:'百事可乐',
+                            service_type:'0',
+                            service_begin_date:'2019-07-18',
+                            service_end_date:'2019-12-31',
+                            service_remark:'',
+                        },
+                        {
+                            cus_name:'重庆永利',
+                            contract_id:'LP2019-X001-2019071801',
+                            service_id:'20190701010102',
+                            staff_name:'百事可乐',
+                            service_type:'1',
+                            service_begin_date:'2019-07-18',
+                            service_end_date:'2019-12-31',
+                            service_remark:'',
+                        },
+                    ],
+                    serviceTypeFilters:[
+                        { text: '实施', value: '0' }, 
+                        { text: '售后', value: '1' },
+                    ],
+                    curPage: 1,
+                    totalPage:100,
                 },
-                idx: -1,
+                searchSetting:{
+                    searchData:{
+                        select_cate:'',
+                        select_word:'',
+                    },
+                    options:[
+                        {
+                            value:'cus_name',
+                            label:'客户名称'
+                        },
+                        {
+                            value:'contract_id',
+                            label:'合同编号'
+                        },
+                        {
+                            value:'service_id',
+                            label:'服务单编号'
+                        },
+                        {
+                            value:'staff_name',
+                            label:'实施员姓名'
+                        }
+                    ]
+                },
                 status:{
                     stripe:true,
                     highlight:true,
-                    showSubTable:false
+                    showSubTable:false,
                 },
-                width:150,
-                items:[
-                    {
-                        prop:'date',
-                        label:'日期'
-                    },
-                    {
-                        prop:'name',
-                        label:'姓名'
-                    },
-                    {
-                        prop:'address',
-                        label:'地址'
-                    }
-                ],
-                dropCol:[
-                    {
-                        prop:'date',
-                        label:'日期'
-                    },
-                    {
-                        prop:'name',
-                        label:'姓名'
-                    },
-                    {
-                        prop:'address',
-                        label:'地址'
-                    }
-                ]
+               
             }
         },
         created() {
             this.getData();
         },
-        mounted(){
-        },
-        computed: {
-            data() {
-                return this.tableData.filter((d) => {
-                    let is_del = false;
-                    for (let i = 0; i < this.del_list.length; i++) {
-                        if (d.name === this.del_list[i].name) {
-                            is_del = true;
-                            break;
-                        }
-                    }
-                    if (!is_del) {
-                        if (d.address.indexOf(this.select_cate) > -1 &&
-                            (d.name.indexOf(this.select_word) > -1 ||
-                                d.address.indexOf(this.select_word) > -1)
-                        ) {
-                            return d;
-                        }
-                    }
-                })
-            }
-        },
         methods: {
-            getSummaries(param){
-                const { columns, data } = param;
-                const sums = [];
-                columns.forEach((column, index)=>{
-                    if (index === 0) {
-                        sums[index] = '总价';
-                        return;
-                      }
-                       const values = data.map(item => Number(item[column.property]));
-                          if (!values.every(value => isNaN(value))) {
-                            sums[index] = values.reduce((prev, curr) => {
-                              const value = Number(curr);
-                              if (!isNaN(value)) {
-                                return prev + curr;
-                              } else {
-                                return prev;
-                              }
-                            }, 0);
-                            sums[index] += ' 元';
-                          } else {
-                            sums[index] = 'N/A';
-                          }
-                })
-               return [];
-            },
-            handlePersonal(){
-                console.dir(this.dropCol);
-            },
-            handleFiled(value){
-                for (var i = this.items.length - 1; i >= 0; i--) {
-                    if(this.items[i].prop == 'personal' + value){
-                        this.items.splice(i,1);
-                        this.dropCol.splice(i,1);
-                        this.width = document.getElementById('container').clientWidth/this.items.length;
-                        return;
-                    }
-
-                }
-                this.items.push({
-                    prop:'personal' + value,
-                    label:'personal' + value
-                });
-                this.dropCol.push({
-                   prop:'personal' + value,
-                   label:'personal' + value 
-                })
-                this.width = document.getElementById('container').clientWidth/this.items.length;
-            },
-            dblclick(row, column, event){
-                console.dir(row);
-                this.status.showSubTable = true;
-                this.subTableData = [row];
-                console.dir(this.subTableData);
-            },
             // 分页导航
             handleCurrentChange(val) {
                 this.cur_page = val;
@@ -209,7 +173,7 @@
             // 获取 easy-mock 的模拟数据
             getData() {
                 // 开发环境使用 easy-mock 数据，正式环境使用 json 文件
-                if (process.env.NODE_ENV === 'development') {
+               /* if (process.env.NODE_ENV === 'development') {
                     this.url = './static/vuetable.json';
                 };
                 
@@ -217,56 +181,53 @@
                     page: this.cur_page
                 }).then((res) => {
                     this.tableData = res.data.list;
-                })
+                })*/
             },
             search() {
-                this.is_search = true;
+                //this.is_search = true;
             },
-            formatter(row, column) {
-                return row.address;
+            serviceType(row, column) {
+                switch (row.service_type) {
+                    case '0':
+                        return '安装';
+                        break;
+                    case '1':
+                        return '售后';
+                        break;
+                    default:
+                        return '未知实施类型';
+                }
             },
-            filterTag(value, row) {
-                return row.tag === value;
+            serviceTypeFilterTag(value, row) {
+                return row.service_type === value;
             },
             handleEdit(index, row) {
                 this.idx = index;
-                const item = this.tableData[index];
-                this.form = {
-                    name: item.name,
-                    date: item.date,
-                    address: item.address
+                const item = this.tableSetting.tableData[index];
+                this.editForm = {
+                    staff_realname: item.staff_realname,
+                    staff_name: item.staff_name,
+                    staff_pwd: item.staff_pwd,
+                    role_name: item.role_name
                 }
-                this.editVisible = true;
+                this.status.editVisible = true;
             },
-            handleDelete(index, row) {
+            /*handleDelete(index, row) {
                 this.idx = index;
-                this.delVisible = true;
-            },
-            delAll() {
-                const length = this.multipleSelection.length;
-                let str = '';
-                this.del_list = this.del_list.concat(this.multipleSelection);
-                for (let i = 0; i < length; i++) {
-                    str += this.multipleSelection[i].name + ' ';
-                }
-                this.$message.error('删除了' + str);
-                this.multipleSelection = [];
-            },
-            handleSelectionChange(val) {
-                this.multipleSelection = val;
+                this.status.delVisible = true;
             },
             // 保存编辑
             saveEdit() {
-                this.$set(this.tableData, this.idx, this.form);
-                this.editVisible = false;
+                this.$set(this.tableSetting.tableData, this.idx, this.editForm);
+                this.status.editVisible = false;
                 this.$message.success(`修改第 ${this.idx+1} 行成功`);
             },
             // 确定删除
             deleteRow(){
-                this.tableData.splice(this.idx, 1);
+                this.tableSetting.tableData.splice(this.idx, 1);
                 this.$message.success('删除成功');
-                this.delVisible = false;
-            }
+                this.status.delVisible = false;
+            }*/
         }
     }
 

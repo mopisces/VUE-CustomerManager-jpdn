@@ -131,6 +131,17 @@ export default new Router({
                     path:'/contractCreate',
                     component: resolve => require(['../components/page/ContractManage/ContractCreate.vue'], resolve),
                     meta:{ title:'添加合同' }
+                },
+                {
+                    path:'/contractCheck',
+                    component: resolve => require(['../components/page/ContractManage/ContractCheck.vue'], resolve),
+                    meta:{ title:'合同审核' }
+                }
+                ,
+                {
+                    path:'/contractManage',
+                    component: resolve => require(['../components/page/ContractManage/ContractManage.vue'], resolve),
+                    meta:{ title:'合同列表' }
                 }
             ]
         },

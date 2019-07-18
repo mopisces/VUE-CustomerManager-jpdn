@@ -284,8 +284,7 @@
                         { required: true, message: '请输入详细地址', trigger: 'blur' }
                     ],
                     serve_amt:[
-                        { required: true, message: '请输入缴费金额', trigger: 'blur' },
-                        { type: 'number', message: '缴费金额必须为数字'}
+                        { required: true, validator: this.checkNum, trigger: 'blur' }
                     ],
                     nextinv_date:[
                         { required: true, message: '请选择缴费日期', trigger: ['blur', 'change'] }
@@ -343,7 +342,16 @@
                     return callback(new Error('请输入正确的客户英文缩写'));
                 }
                 callback();
-            }
+            },
+            checkNum(rule, value, callback){
+                if(!value){
+                    return callback(new Error('请输入金额'));
+                }
+                if(!(/^[0-9]+$/).test(value)){
+                    return callback(new Error('金额必须为数字'));
+                }
+                callback();
+            },
         },
         watch:{
             'form.contract_date':(newVal,oldVal)=>{

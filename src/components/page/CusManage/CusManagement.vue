@@ -9,7 +9,7 @@
         <div class="container" >
             <div class="handle-box">
                 <el-select v-model="searchSetting.searchData.select_cate" placeholder="字段名称" class="handle-select mr10">
-                    <el-option :label="items.label" :value="items.value" v-for="(items,indexs) in searchSetting.options"></el-option>
+                    <el-option :label="items.label" :value="items.value" v-for="(items,indexs) in searchSetting.options" :key="`opt_${indexs}`"></el-option>
                 </el-select>
                 <el-input v-model="searchSetting.searchData.select_word" placeholder="筛选关键词" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="search" @click="search">搜索</el-button>
@@ -34,8 +34,8 @@
                 <el-table-column prop="cus_invstate" label="缴费状态"  width="150" :formatter="invstateFormatter" :filters="tableSetting.invstateFilters" :filter-method="invstateFilterTag"></el-table-column>
                 <el-table-column prop="nextinv_date" label="缴费日期"  width="150"></el-table-column>
                 <el-table-column prop="serve_amt" label="缴费金额"  width="150"></el-table-column>
-                <el-table-column prop="sun_logno" label="向日葵识别码"  width="150"></el-table-column>
-                <el-table-column prop="sun_logpwd" label="向日葵验证码"  width="200"></el-table-column>
+                <el-table-column prop="sun_logno" label="向日葵识别码"  width="270"></el-table-column>
+                <el-table-column prop="sun_logpwd" label="向日葵验证码"  width="150"></el-table-column>
                 <el-table-column prop="cus_remark" label="客户备注"  width="235"></el-table-column>
                 <el-table-column prop="cus_remark2" label="客户备注2"  width="235"></el-table-column>
                 <el-table-column prop="cus_remark3" label="客户备注3"  width="235"></el-table-column>
@@ -56,6 +56,7 @@
 
 <script>
     import {CodeToText} from 'element-china-area-data';
+    import store from '@/store/store';
     export default {
         data() {
             return {

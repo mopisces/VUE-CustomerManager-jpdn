@@ -123,3 +123,8 @@
         }
     }
 </script>
+<style type="text/css">
+    .form-box{
+        margin:0 auto;
+    }
+</style>

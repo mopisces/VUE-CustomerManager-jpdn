@@ -65,26 +65,12 @@
                         title: '合同管理',
                         subs: [
                             {
-                                index: '3-2',
+                                index:'contractManage',
+                                title:'合同列表'
+                            },
+                            {
+                                index: 'contractCheck',
                                 title: '合同审核',
-                                subs: [
-                                    {
-                                        index: 'editor',
-                                        title: '销售合同'
-                                    },
-                                    {
-                                        index: 'markdown',
-                                        title: '维护合同'
-                                    },
-                                    {
-                                        index: 'markdown',
-                                        title: '增值合同'
-                                    },
-                                    {
-                                        index: 'markdown',
-                                        title: 'webapp合同'
-                                    }
-                                ]
                             },
                             {
                                 index: 'contractCreate',

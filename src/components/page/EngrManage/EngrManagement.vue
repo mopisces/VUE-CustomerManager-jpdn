@@ -9,7 +9,7 @@
         <div class="container">
             <div class="handle-box">
                 <el-select v-model="searchSetting.searchData.select_cate" placeholder="字段名称" class="handle-select mr10">
-                    <el-option :label="items.label" :value="items.value" v-for="(items,indexs) in searchSetting.options"></el-option>
+                    <el-option :label="items.label" :value="items.value" v-for="(items,indexs) in searchSetting.options" :key="`opt_${indexs}`"></el-option>
                 </el-select>
                 <el-input v-model="searchSetting.searchData.select_word" placeholder="筛选关键词" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="search" @click="search">搜索</el-button>
