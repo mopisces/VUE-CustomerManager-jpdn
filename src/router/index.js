@@ -20,7 +20,7 @@ export default new Router({
                     component: resolve => require(['../components/page/Dashboard.vue'], resolve),
                     meta: { title: '系统首页' }
                 },
-                {
+                /*{
                     path: '/icon',
                     component: resolve => require(['../components/page/Icon.vue'], resolve),
                     meta: { title: '自定义图标' }
@@ -29,13 +29,13 @@ export default new Router({
                     path: '/table',
                     component: resolve => require(['../components/page/BaseTable.vue'], resolve),
                     meta: { title: '基础表格' }
-                },
+                },*/
                 {
                     path: '/tabs',
-                    component: resolve => require(['../components/page/Tabs.vue'], resolve),
-                    meta: { title: 'tab选项卡' }
+                    component: resolve => require(['../components/page/Public/Tabs.vue'], resolve),
+                    meta: { title: '消息中心' }
                 },
-                {
+                /*{
                     path: '/form',
                     component: resolve => require(['../components/page/BaseForm.vue'], resolve),
                     meta: { title: '基本表单' }
@@ -75,21 +75,21 @@ export default new Router({
                     path: '/dialog',
                     component: resolve => require(['../components/page/DragDialog.vue'], resolve),
                     meta: { title: '拖拽弹框' }
-                },
+                },*/
                 {
                     // 权限页面
                     path: '/permission',
-                    component: resolve => require(['../components/page/Permission.vue'], resolve),
+                    component: resolve => require(['../components/page/Public/Permission.vue'], resolve),
                     meta: { title: '权限测试', permission: true }
                 },
                 {
                     path: '/404',
-                    component: resolve => require(['../components/page/404.vue'], resolve),
+                    component: resolve => require(['../components/page/Public/404.vue'], resolve),
                     meta: { title: '404' }
                 },
                 {
                     path: '/403',
-                    component: resolve => require(['../components/page/403.vue'], resolve),
+                    component: resolve => require(['../components/page/Public/403.vue'], resolve),
                     meta: { title: '403' }
                 },
                 {
@@ -136,18 +136,22 @@ export default new Router({
                     path:'/contractCheck',
                     component: resolve => require(['../components/page/ContractManage/ContractCheck.vue'], resolve),
                     meta:{ title:'合同审核' }
-                }
-                ,
+                },
                 {
                     path:'/contractManage',
                     component: resolve => require(['../components/page/ContractManage/ContractManage.vue'], resolve),
                     meta:{ title:'合同列表' }
+                },
+                {
+                    path:'/financialManage',
+                    component: resolve => require(['../components/page/ContractManage/FinancialManage.vue'], resolve),
+                    meta:{ title:'财务管理' }
                 }
             ]
         },
         {
             path: '/login',
-            component: resolve => require(['../components/page/Login.vue'], resolve)
+            component: resolve => require(['../components/page/Public/Login.vue'], resolve)
         },
         {
             path: '*',

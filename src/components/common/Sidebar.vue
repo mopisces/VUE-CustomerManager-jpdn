@@ -69,6 +69,11 @@
                                 title:'合同列表'
                             },
                             {
+                                index: 'financialManage',
+                                title: '财务管理',
+                            },
+                            
+                            {
                                 index: 'contractCheck',
                                 title: '合同审核',
                             },

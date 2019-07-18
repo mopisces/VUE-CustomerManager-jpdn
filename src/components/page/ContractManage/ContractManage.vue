@@ -23,8 +23,8 @@
                 <el-table-column prop="contract_agree_amt" label="合同约定金额"  width="150"></el-table-column>
                 <el-table-column prop="contract_begin_date" label="合同开始日期"  width="150"></el-table-column>
                 <el-table-column prop="contract_end_date" label="合同结束日期"  width="150"></el-table-column>
-                <el-table-column prop="contract_ispay" label="是否付清"  width="150" :formatter="contractIspayFormatter" :filters="tableSetting.IspayFilters" :filter-method="IspayFilterTag" filter-placement="bottom-end"></el-table-column>
-                <el-table-column prop="contract_isinv" label="是否开票"  width="150" :formatter="contractIsinvFormatter" :filters="tableSetting.IsinvFilters" :filter-method="IsinvFilterTag" filter-placement="bottom-end"></el-table-column>
+                <el-table-column prop="contract_ispay" label="付款状态"  width="150" :formatter="contractIspayFormatter" :filters="tableSetting.IspayFilters" :filter-method="IspayFilterTag" filter-placement="bottom-end"></el-table-column>
+                <el-table-column prop="contract_isinv" label="开票状态"  width="150" :formatter="contractIsinvFormatter" :filters="tableSetting.IsinvFilters" :filter-method="IsinvFilterTag" filter-placement="bottom-end"></el-table-column>
                 <el-table-column prop="contract_remark" label="合同备注"  width="230"></el-table-column>
                 <el-table-column align="center" label="操作" fixed="right">
                     <template slot-scope="scope">

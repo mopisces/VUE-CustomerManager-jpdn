@@ -134,14 +134,14 @@
                     </el-row>
                     <el-row>
                         <el-col :span="24">
-                            <el-form-item label="向日葵识别码" prop="sun_logno">
+                            <el-form-item label="向日葵识别码" >
                                 <el-input v-model.trim="form.sun_logno" placeholder="请输入向日葵识别码" maxlength="30" show-word-limit></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row>
                         <el-col :span="24">
-                            <el-form-item label="向日葵验证码" prop="sun_logpwd">
+                            <el-form-item label="向日葵验证码" >
                                 <el-input v-model.trim="form.sun_logpwd" placeholder="请输入向日葵验证码" maxlength="10" show-word-limit></el-input>
                             </el-form-item>
                         </el-col>
@@ -288,12 +288,6 @@
                     ],
                     nextinv_date:[
                         { required: true, message: '请选择缴费日期', trigger: ['blur', 'change'] }
-                    ],
-                    sun_logno:[
-                        { required: true, message: '请输入向日葵识别码', trigger: 'blur' }
-                    ],
-                    sun_logpwd:[
-                        { required: true, message: '请输入向日葵验证码', trigger: 'blur' }
                     ]
                 }
             }
