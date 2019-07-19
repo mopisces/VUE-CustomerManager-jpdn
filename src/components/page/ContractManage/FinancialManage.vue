@@ -10,7 +10,7 @@
             <el-tabs v-model="message">
                 <el-tab-pane label="未缴费合同" name="pay">
                     <el-table :data="unpayData"  style="width: 100%">
-                        <el-table-column type="expand">
+                        <el-table-column type="expand"  align="center">
                             <template slot-scope="props">
                                 <el-form label-position="left" class="demo-table-expand">
                                     <el-form-item label="签订日期">
@@ -34,10 +34,10 @@
                                 </el-form>
                             </template>
                         </el-table-column>
-                        <el-table-column label="客户名称" prop="propose_cus"></el-table-column>
-                        <el-table-column label="合同编号" prop="contract_id"></el-table-column>
-                        <el-table-column label="合同类型" :formatter="formatter" prop="contract_type"></el-table-column>
-                        <el-table-column width="120" label="操作">
+                        <el-table-column label="客户名称" prop="propose_cus" width="150"></el-table-column>
+                        <el-table-column label="合同编号" prop="contract_id"  align="center"></el-table-column>
+                        <el-table-column label="合同类型" :formatter="contractTypeFormatter" prop="contract_type" :filters="contractTypeFilters" :filter-method="contractTypeFilterTag" filter-placement="bottom-end" align="center"></el-table-column>
+                        <el-table-column width="120" label="操作"  align="center">
                             <template slot-scope="scope">
                                 <el-button type="primary" icon="el-icon-edit" @click="handlePay(scope.$index, scope.row)">付清</el-button>
                             </template>
@@ -72,9 +72,9 @@
                             </template>
                         </el-table-column>
                         <el-table-column label="客户名称" prop="propose_cus"></el-table-column>
-                        <el-table-column label="合同编号" prop="contract_id"></el-table-column>
-                        <el-table-column label="合同类型" :formatter="formatter" prop="contract_type"></el-table-column>
-                        <el-table-column label="缴费状态" prop="contract_ispay" :formatter="contractIspayFormatter"></el-table-column>
+                        <el-table-column label="合同编号" prop="contract_id"  align="center"></el-table-column>
+                        <el-table-column label="合同类型" :formatter="contractTypeFormatter" prop="contract_type" :filters="contractTypeFilters" :filter-method="contractTypeFilterTag" filter-placement="bottom-end" align="center"></el-table-column>
+                        <el-table-column label="缴费状态" prop="contract_ispay" :formatter="contractIspayFormatter"  align="center"></el-table-column>
                         <el-table-column width="120" label="操作">
                             <template slot-scope="scope">
                                 <el-button type="primary" icon="el-icon-edit" @click="handleInv(scope.$index, scope.row)">开票</el-button>
@@ -90,15 +90,18 @@
 
 <script>
     import store from '@/store/store';
+    import { contractType,contractIspay } from '@/until/formatter';
+    import { contractTypeFilters } from '@/until/filters';
     export default {
         data() {
             return {
                 message: 'pay',
                 showHeader: false,
+                tableSetting:{},
                 unpayData:[
                     {
                         contract_id:'LP2019-X001-2019071801',
-                        propose_cus:'重庆永利',
+                        propose_cus:'重庆永利unpayData',
                         cus_id:'1',
                         contract_type:'0',
                         contract_on_date:'2017-07-18',
@@ -113,9 +116,9 @@
                     },
                     {
                         contract_id:'LP2019-X001-2019071801',
-                        propose_cus:'重庆永利',
+                        propose_cus:'重庆永利unpayData',
                         cus_id:'1',
-                        contract_type:'0',
+                        contract_type:'1',
                         contract_on_date:'2017-07-18',
                         contract_begin_date:'2017-06-18',
                         contract_end_date:'2017-08-18',
@@ -130,7 +133,7 @@
                 uninvData:[
                     {
                         contract_id:'LP2019-X001-2019071801',
-                        propose_cus:'重庆永利',
+                        propose_cus:'重庆永利uninvData',
                         cus_id:'1',
                         contract_type:'0',
                         contract_on_date:'2017-07-18',
@@ -145,9 +148,9 @@
                     },
                     {
                         contract_id:'LP2019-X001-2019071801',
-                        propose_cus:'重庆永利',
+                        propose_cus:'重庆永利uninvData',
                         cus_id:'1',
-                        contract_type:'0',
+                        contract_type:'1',
                         contract_on_date:'2017-07-18',
                         contract_begin_date:'2017-06-18',
                         contract_end_date:'2017-08-18',
@@ -160,6 +163,14 @@
                     },
 
                 ]
+            }
+        },
+        created(){
+
+        },
+        computed:{
+            contractTypeFilters(){
+                return contractTypeFilters;
             }
         },
         methods: {
@@ -199,35 +210,14 @@
                     })
                 })
             },
-            formatter(row, column){
-                switch (row.contract_type) {
-                    case '0':
-                        return '销售合同';
-                        break;
-                    case '1':
-                        return '维护合同';
-                        break;
-                    case '2':
-                        return '增值合同';
-                        break;
-                    case '3':
-                        return 'webapp合同';
-                        break;
-                    default:
-                        return '未知合同类型';
-                }
+            contractTypeFormatter(row, column){
+                return contractType(row.contract_type);
             },
             contractIspayFormatter(row, column){
-                switch (row.contract_ispay) {
-                    case '0':
-                        return '未付清';
-                        break;
-                    case '1':
-                        return '已付清';
-                        break;
-                    default:
-                        return '未知付款状态';
-                }
+                return contractIspay(row.contract_ispay);
+            },
+            contractTypeFilterTag(value, row){
+                return row.contract_type === value;
             }
         }
     }

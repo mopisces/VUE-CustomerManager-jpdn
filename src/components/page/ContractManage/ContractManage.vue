@@ -15,17 +15,26 @@
                 <el-button type="primary" icon="search" @click="search">搜索</el-button>
             </div>
             <el-table :data="tableSetting.tableData" border class="table" ref="cusManageTab"  style="width:100%;" :highlight-current-row="status.highlight" >
-                <el-table-column prop="contract_id" label="合同编号"  width="230" fixed></el-table-column>
-                <el-table-column prop="propose_cus" label="客户名称"  width="150" fixed></el-table-column>
-                <el-table-column prop="contract_type" label="合同类型"  width="150"  :formatter="contractTypeFormatter" :filters="tableSetting.contractTypeFilters" :filter-method="contractTypeFilterTag" filter-placement="bottom-end"></el-table-column>
-                <el-table-column prop="contract_on_date" label="合同签订日期"  width="150"></el-table-column>
-                <el-table-column prop="contract_amt" label="合同金额"  width="150"></el-table-column>
-                <el-table-column prop="contract_agree_amt" label="合同约定金额"  width="150"></el-table-column>
-                <el-table-column prop="contract_begin_date" label="合同开始日期"  width="150"></el-table-column>
-                <el-table-column prop="contract_end_date" label="合同结束日期"  width="150"></el-table-column>
-                <el-table-column prop="contract_ispay" label="付款状态"  width="150" :formatter="contractIspayFormatter" :filters="tableSetting.IspayFilters" :filter-method="IspayFilterTag" filter-placement="bottom-end"></el-table-column>
-                <el-table-column prop="contract_isinv" label="开票状态"  width="150" :formatter="contractIsinvFormatter" :filters="tableSetting.IsinvFilters" :filter-method="IsinvFilterTag" filter-placement="bottom-end"></el-table-column>
-                <el-table-column prop="contract_remark" label="合同备注"  width="230"></el-table-column>
+                <el-table-column prop="contract_id" label="合同编号"  width="230" fixed align="center"></el-table-column>
+                <el-table-column prop="propose_cus" label="客户名称"  width="150" fixed align="center"></el-table-column>
+                <el-table-column prop="contract_type" label="合同类型"  width="150"  :formatter="contractTypeFormatter" :filters="contractTypeFilters" :filter-method="contractTypeFilterTag" filter-placement="bottom-end" align="center"></el-table-column>
+                <el-table-column prop="contract_on_date" label="合同签订日期"  width="150" sortable align="center"></el-table-column>
+                <el-table-column prop="contract_amt" label="合同金额"  width="150" align="center"></el-table-column>
+                <el-table-column prop="contract_agree_amt" label="合同约定金额"  width="150" sortable align="center"></el-table-column>
+                <el-table-column prop="contract_begin_date" label="合同开始日期"  width="150" sortable align="center"></el-table-column>
+                <el-table-column prop="contract_end_date" label="合同结束日期"  width="150" sortable align="center"></el-table-column>
+                <el-table-column prop="contract_ispay" label="付款状态"  width="150" :formatter="contractIspayFormatter" :filters="IspayFilters" :filter-method="IspayFilterTag" filter-placement="bottom-end" align="center"></el-table-column>
+                <el-table-column prop="contract_isinv" label="开票状态"  width="150" :formatter="contractIsinvFormatter" :filters="IsinvFilters" :filter-method="IsinvFilterTag" filter-placement="bottom-end" align="center"></el-table-column>
+                <el-table-column prop="contract_remark" label="合同备注"  width="230" align="center">
+                    <template slot-scope="scope">
+                        <el-popover trigger="click" placement="top" v-if=" scope.row.contract_remark != '' ">
+                            <p>{{ scope.row.contract_remark }}</p>
+                            <div slot="reference" class="name-wrapper">
+                                <el-button type="success" round size="large">点击查看详细备注</el-button>
+                            </div>
+                        </el-popover>
+                    </template>                
+                </el-table-column>
                 <el-table-column align="center" label="操作" fixed="right">
                     <template slot-scope="scope">
                         <el-button type="primary" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">修改</el-button>
@@ -39,7 +48,7 @@
         </div>
         <!-- 编辑弹出框 -->
         <el-dialog :title="editForm.contract_id" :visible.sync="status.editVisible" width="40%">
-            <el-form  ref="editForm" :model="editForm" label-width="120px" :rules="editSetting.rules">
+            <el-form  ref="editForm" :model="editForm" label-width="120px" :rules="rules">
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="客户名称" prop="cus_id">
@@ -49,7 +58,7 @@
                     <el-col :span="12">
                         <el-form-item label="合同类型" prop="contract_type">
                             <el-select v-model="editForm.contract_type" placeholder="选择合同类型">
-                                <el-option v-for="(item,index) in editSetting.contractType " :key="`opt_${index}`" :label="item.label" :value="item.value"></el-option>
+                                <el-option v-for="(item,index) in contractType " :key="`opt_${index}`" :label="item.label" :value="item.value"></el-option>
                             </el-select>
                         </el-form-item>      
                     </el-col>
@@ -57,7 +66,7 @@
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="合同签订日期" prop="contract_on_date">
-                            <el-date-picker type="date" placeholder="选择签订日期" v-model="editForm.contract_on_date" style="width: 100%;" ></el-date-picker>
+                            <el-date-picker type="date" placeholder="选择签订日期" v-model="editForm.contract_on_date" style="width: 100%;"  value-format="yyyy-MM-dd" format="yyyy 年 MM 月 dd 日"></el-date-picker>
                         </el-form-item>      
                     </el-col>
                 </el-row>
@@ -76,12 +85,12 @@
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="合同开始日期" prop="contract_begin_date">
-                            <el-date-picker type="date" placeholder="选择开始日期" v-model="editForm.contract_begin_date" style="width: 100%;"></el-date-picker>
+                            <el-date-picker type="date" placeholder="选择开始日期" v-model="editForm.contract_begin_date" style="width: 100%;"  value-format="yyyy-MM-dd" format="yyyy 年 MM 月 dd 日"></el-date-picker>
                         </el-form-item>      
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="合同结束日期" prop="contract_end_date">
-                            <el-date-picker type="date" placeholder="选择结束日期" v-model="editForm.contract_end_date" style="width: 100%;"></el-date-picker>
+                            <el-date-picker type="date" placeholder="选择结束日期" v-model="editForm.contract_end_date" style="width: 100%;"  value-format="yyyy-MM-dd" format="yyyy 年 MM 月 dd 日"></el-date-picker>
                         </el-form-item>      
                     </el-col>
                 </el-row>
@@ -103,6 +112,10 @@
 
 <script>
     import store from '@/store/store';
+    import { contractTabRules } from '@/until/rules';
+    import { contractType,contractIspay,contractIsinv  } from '@/until/formatter';
+    import { contractTypeOptions } from '@/until/options';
+    import { contractTypeFilters,IspayFilters,IsinvFilters } from '@/until/filters';
     export default {
         data() {
             return {
@@ -119,7 +132,7 @@
                             contract_ispay:'1',
                             contract_isinv:'1',
                             contract_checked:'0',
-                            contract_remark:'',
+                            contract_remark:'ssssss',
                             contract_amt:'5000',
                             contract_agree_amt:'5000'
                         },
@@ -139,20 +152,6 @@
                             contract_agree_amt:'5000'
                         }
 
-                    ],
-                    IspayFilters:[
-                        { text: '未付清', value: '0' }, 
-                        { text: '已付清', value: '1' },
-                    ],
-                    IsinvFilters:[
-                        { text: '未开票', value: '0' }, 
-                        { text: '已开票', value: '1' },
-                    ],
-                    contractTypeFilters:[
-                        { text: '销售合同', value: '0' },
-                        { text: '维护合同', value: '1' },
-                        { text: '增值合同', value: '2' },
-                        { text: 'webapp合同', value: '3' },
                     ],
                     curPage: 1,
                     totalPage:100,
@@ -174,24 +173,6 @@
                     ]
                 },
                 editSetting:{
-                    contractType:[
-                        {
-                            label:'销售合同',
-                            value:'0'
-                        },
-                        {
-                            label:'维护合同',
-                            value:'1'
-                        },
-                        {
-                            label:'增值合同',
-                            value:'2'
-                        },
-                        {
-                            label:'webapp合同',
-                            value:'3'
-                        }
-                    ],
                     cusName:[
                         {
                             value: '1',
@@ -206,29 +187,6 @@
                             label: '上海' 
                         },
                     ],
-                    rules:{
-                        cus_id:[
-                            { required: true, message: '请选择客户名称', trigger: 'change' }
-                        ],
-                        contract_id:[
-                            { required: true, message: '请选择合同编号', trigger: 'change' }
-                        ],
-                        contract_on_date:[
-                            { type: 'date', required: true, message: '请选择签订日期', trigger: ['blur', 'change']  }
-                        ],
-                        contract_amt:[
-                            { required: true, validator: this.checkNum , trigger: 'blur' },
-                        ],
-                        contract_agree_amt:[
-                            { required: true, validator: this.checkNum , trigger: 'blur'  },
-                        ],
-                        contract_begin_date:[
-                            { type: 'date', required: true, message: '请选择合同开始日期', trigger: ['blur', 'change'] }
-                        ],
-                        contract_end_date:[
-                            { type: 'date', required: true, message: '请选择合同结束日期', trigger: ['blur', 'change'] }
-                        ],
-                    }
                 },
                 editForm: {
                     contract_id: '',
@@ -250,6 +208,24 @@
         created() {
             this.getData();
         },
+        computed:{
+            contractType(){
+                return contractTypeOptions;
+            },
+            rules(){
+                return contractTabRules;
+            },
+            IspayFilters(){
+                return IspayFilters;
+            },
+            contractTypeFilters(){
+                return contractTypeFilters;
+            },
+            IsinvFilters(){
+                return IsinvFilters;
+            }
+
+        },
         methods: {
             // 分页导航
             handleCurrentChange(val) {
@@ -263,46 +239,13 @@
                 console.dir('search');
             },
             contractTypeFormatter(row, column){
-                switch (row.contract_type) {
-                    case '0':
-                        return '销售合同';
-                        break;
-                    case '1':
-                        return '维护合同';
-                        break;
-                    case '2':
-                        return '增值合同';
-                        break;
-                    case '3':
-                        return 'webapp合同';
-                        break;
-                    default:
-                        return '未知合同类型';
-                }
+                return contractType(row.contract_type);
             },
             contractIspayFormatter(row, column) {
-                switch (row.contract_ispay) {
-                    case '0':
-                        return '未付清';
-                        break;
-                    case '1':
-                        return '已付清';
-                        break;
-                    default:
-                        return '未知付款状态';
-                }
+                return contractIspay(row.contract_ispay);
             },
             contractIsinvFormatter(row,column){
-                switch (row.contract_isinv) {
-                    case '0':
-                        return '未开票';
-                        break;
-                    case '1':
-                        return '已开票';
-                        break;
-                    default:
-                        return '未知开票状态';
-                }
+                return contractIsinv(row.contract_isinv);
             },
             IspayFilterTag(value, row){
                 return row.contract_ispay === value;
@@ -313,15 +256,6 @@
             contractTypeFilterTag(value, row){
                 return row.contract_type === value;
             },
-            checkNum(rule, value, callback){
-                if(!value){
-                    return callback(new Error('请输入金额'));
-                }
-                if(!(/^[0-9]+$/).test(value)){
-                    return callback(new Error('金额必须为数字'));
-                }
-                callback();
-            },
             handleEdit(index, row) {
                 this.idx = index;
                 const item = this.tableSetting.tableData[index];
@@ -330,9 +264,16 @@
             },
             // 保存编辑
             saveEdit() {
-                this.$set(this.tableSetting.tableData, this.idx, this.editForm);
-                this.status.editVisible = false;
-                this.$message.success(`修改第 ${this.idx+1} 行成功`);
+                this.$refs['editForm'].validate((valid) => {
+                    if (valid) {
+                        this.$set(this.tableSetting.tableData, this.idx, this.editForm);
+                        this.status.editVisible = false;
+                        this.$message.success(`修改第 ${this.idx+1} 行成功`);
+                    } else {
+                        console.log('error submit!!');
+                        return false;
+                    }
+                });
             },
         }
     }
@@ -359,5 +300,13 @@
     }
     .red{
         color: #ff0000;
+    }
+</style>
+<style>
+    .el-popover {
+        background: #ffec0d;
+    }
+    .current-row > td {
+       background: rgba(0, 158, 250, 0.219) !important;
     }
 </style>

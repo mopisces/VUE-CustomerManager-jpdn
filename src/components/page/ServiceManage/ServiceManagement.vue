@@ -14,21 +14,30 @@
                 <el-input v-model="searchSetting.searchData.select_word" placeholder="筛选关键词" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="search" @click="search">搜索</el-button>
             </div>
-            <el-table :data="tableSetting.tableData" border class="table" ref="serviceManageTab"  style="width:100%;" :highlight-current-row="status.highlight"  row-key="id"  :default-sort = "{prop: 'service_begin_date', order: 'descending'}">
-                <el-table-column prop="cus_name" label="客户名称"  width="150" fixed></el-table-column>
-                <el-table-column prop="contract_id" label="合同编号"  width="235" fixed></el-table-column>
-                <el-table-column prop="service_id" label="服务单编号"  width="180" fixed></el-table-column>
-                <el-table-column prop="staff_name" label="实施员名称"  width="150" fixed="right"></el-table-column>
-                <el-table-column prop="service_type" label="实施类型"  width="100"  :formatter="serviceType" :filters="tableSetting.serviceTypeFilters" :filter-method="serviceTypeFilterTag" filter-placement="bottom-end"></el-table-column>
-                <el-table-column prop="service_begin_date" label="实施日期"  width="150" sortable></el-table-column>
-                <el-table-column prop="service_end_date" label="结束日期"  width="150" sortable></el-table-column>
-                <el-table-column prop="service_remark" label="服务内容"  width="235"></el-table-column>
-                <!-- <el-table-column align="center" label="操作">
+            <el-table :data="tableSetting.tableData" border class="table" ref="serviceManageTab"  style="width:100%;" highlight-current-row  row-key="id">
+                <el-table-column prop="cus_name" label="客户名称"  width="150" fixed  align="center"></el-table-column>
+                <el-table-column prop="contract_id" label="合同编号"  width="230" fixed align="center"></el-table-column>
+                <el-table-column prop="service_id" label="服务单编号"  width="180" fixed align="center"></el-table-column>
+                <el-table-column prop="staff_name" label="实施员名称"  width="100" fixed="right" align="center"></el-table-column>
+                <el-table-column prop="service_type" label="实施类型"  width="100"  :formatter="serviceType" :filters="serviceTypeFilters" :filter-method="serviceTypeFilterTag" filter-placement="bottom-end" align="center"></el-table-column>
+                <el-table-column prop="service_begin_date" label="实施日期"  width="150" sortable align="center"></el-table-column>
+                <el-table-column prop="service_end_date" label="结束日期"  width="150" sortable align="center"></el-table-column>
+                <el-table-column prop="service_remark" label="服务内容"  width="200" align="center">
+                     <template slot-scope="scope">
+                        <el-popover trigger="click" placement="top">
+                            <p>{{ scope.row.service_remark }}</p>
+                            <div slot="reference" class="name-wrapper">
+                                <el-button type="success" round size="large">点击查看服务内容</el-button>
+                            </div>
+                        </el-popover>
+                    </template>     
+                </el-table-column>
+                <el-table-column align="center" label="操作" fixed="right" width="150">
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
+                        <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">作废</el-button>
                     </template>
-                </el-table-column> -->
+                </el-table-column>
             </el-table>
             <div class="pagination">
                 <el-pagination background @current-change="handleCurrentChange" layout="prev, pager, next" :total="tableSetting.totalPage">
@@ -37,42 +46,45 @@
         </div>
 
         <!-- 编辑弹出框 -->
-        <!-- <el-dialog title="编辑" :visible.sync="status.editVisible" width="30%">
-            <el-form  ref="editForm" :model="editForm" label-width="100px" :rules="rules">
+        <el-dialog title="编辑" :visible.sync="status.editVisible" width="40%">
+            <el-form  ref="editForm" :model="editForm" label-width="120px" :rules="rules">
                 <el-row>
-                    <el-col :span="15">
-                        <el-form-item label="管理员姓名">
-                            <el-input v-model.trim="editForm.staff_realname" maxlength="10" show-word-limit></el-input>
+                    <el-col :span="12">
+                        <el-form-item label="客户名称">
+                            <el-cascader placeholder="选择客户名称" filterable :options="cusName"  v-model="editForm.cus_id" disabled></el-cascader>
                         </el-form-item>       
                     </el-col>
                 </el-row>
                 <el-row>
-                    <el-col :span="15">
-                        <el-form-item label="登录名称">
-                            <el-input v-model.trim="editForm.staff_name"></el-input>
+                    <el-col :span="12">
+                        <el-form-item label="合同编号">
+                            <el-input v-model.trim="editForm.contract_id" disabled></el-input>
                         </el-form-item>       
                     </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="15">
-                        <el-form-item label="登录密码" prop="staff_pwd">
-                            <el-input v-model.trim="editForm.staff_pwd"></el-input>
-                        </el-form-item>      
-                    </el-col>
-                </el-row>
-                <el-row v-if="editSetting.showConfirmInput">
-                    <el-col :span="15">
-                        <el-form-item label="确认密码" prop="confirm_pwd" > 
-                            <el-input v-model.trim="editForm.confirm_pwd"></el-input>
-                        </el-form-item>      
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="15">
-                        <el-form-item label="请选择权限" prop="role_name">
-                            <el-select v-model.trim="editForm.role_name" placeholder="请选择权限分组">
-                                <el-option v-for="item in editSetting.authority" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                    <el-col :span="12">
+                        <el-form-item label="实施类型">
+                            <el-select v-model="editForm.service_type" placeholder="选择实施类型" disabled>
+                                <el-option v-for="item in serviceTypeOpt" :key="item.value" :label="item.label" :value="item.value"></el-option>
                             </el-select>
+                        </el-form-item>       
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="实施开始日期" prop="service_begin_date">
+                            <el-date-picker type="date" placeholder="选择开始日期" v-model="editForm.service_begin_date" style="width: 100%;"></el-date-picker>
+                        </el-form-item>      
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="实施结束日期" prop="service_end_date">
+                            <el-date-picker type="date" placeholder="选择结束日期" v-model="editForm.service_end_date" style="width: 100%;"></el-date-picker>
+                        </el-form-item>      
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="24">
+                        <el-form-item label="服务内容" prop="contract_remark">
+                            <el-input type="textarea" rows="5" v-model.trim="editForm.contract_remark" placeholder="请填写服务内容"  maxlength="200" show-word-limit></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -82,49 +94,76 @@
                 <el-button @click="status.editVisible = false">取 消</el-button>
                 <el-button type="primary" @click="saveEdit">确 定</el-button>
             </span>
-        </el-dialog> -->
+        </el-dialog>
 
         <!-- 删除提示框 -->
-       <!-- <el-dialog title="提示" :visible.sync="status.delVisible" width="300px" center>
-            <div class="del-dialog-cnt">删除不可恢复，是否确定删除？</div>
+       <el-dialog title="提示" :visible.sync="status.delVisible" width="300px" center>
+            <div class="del-dialog-cnt">作废不可恢复，是否确定作废？</div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="status.delVisible = false">取 消</el-button>
                 <el-button type="primary" @click="deleteRow">确 定</el-button>
             </span>
-        </el-dialog> -->
+        </el-dialog>
     </div>
 </template>
 
 <script>
+    import { serviceTabRules } from '@/until/rules';
+    import { serviceTypeFilters } from '@/until/filters';
+    import { serviceTypeFormatter } from '@/until/formatter';
+    import { serviceTypeOptions } from '@/until/options';
     export default {
         data() {
             return {
+                cusName:[
+                    {
+                        value: '1',
+                        label: '重庆永利',
+                    },
+                    {
+                        value: '2',
+                        label: '宁波伟捷包装' 
+                    },
+                    {
+                        value: '3',
+                        label: '上海' 
+                    },
+                ],
                 tableSetting:{
                     tableData:[
                         {
+                            cus_id:'1',
                             cus_name:'重庆永利',
                             contract_id:'LP2019-X001-2019071801',
                             service_id:'20190701010102',
                             staff_name:'百事可乐',
                             service_type:'0',
-                            service_begin_date:'2019-07-18',
+                            service_begin_date:'2019-06-18',
                             service_end_date:'2019-12-31',
-                            service_remark:'',
+                            service_remark:'这是服务内容信息这是服务内容信息这是服务内容信息',
                         },
                         {
-                            cus_name:'重庆永利',
+                            cus_id:'2',
+                            cus_name:'宁波伟捷包装',
                             contract_id:'LP2019-X001-2019071801',
                             service_id:'20190701010102',
                             staff_name:'百事可乐',
                             service_type:'1',
                             service_begin_date:'2019-07-18',
                             service_end_date:'2019-12-31',
-                            service_remark:'',
+                            service_remark:'这是服务内容信息这是服务内容信息这是服务内容信息',
                         },
-                    ],
-                    serviceTypeFilters:[
-                        { text: '实施', value: '0' }, 
-                        { text: '售后', value: '1' },
+                        {
+                            cus_id:'3',
+                            cus_name:'上海',
+                            contract_id:'LP2019-X001-2019071801',
+                            service_id:'20190701010102',
+                            staff_name:'百事可乐',
+                            service_type:'1',
+                            service_begin_date:'2019-07-18',
+                            service_end_date:'2019-12-31',
+                            service_remark:'这是服务内容信息这是服务内容信息这是服务内容信息',
+                        },
                     ],
                     curPage: 1,
                     totalPage:100,
@@ -153,16 +192,29 @@
                         }
                     ]
                 },
+                editForm:{},
                 status:{
                     stripe:true,
                     highlight:true,
                     showSubTable:false,
+                    delVisible:false,
+                    editVisible:false
                 },
-               
             }
         },
         created() {
             this.getData();
+        },
+        computed:{
+            rules(){
+                return serviceTabRules;
+            },
+            serviceTypeFilters(){
+                return serviceTypeFilters;
+            },
+            serviceTypeOpt(){
+                return serviceTypeOptions;
+            }
         },
         methods: {
             // 分页导航
@@ -172,31 +224,14 @@
             },
             // 获取 easy-mock 的模拟数据
             getData() {
-                // 开发环境使用 easy-mock 数据，正式环境使用 json 文件
-               /* if (process.env.NODE_ENV === 'development') {
-                    this.url = './static/vuetable.json';
-                };
-                
-                this.$axios.get(this.url, {
-                    page: this.cur_page
-                }).then((res) => {
-                    this.tableData = res.data.list;
-                })*/
+               
             },
+            // 搜索
             search() {
-                //this.is_search = true;
+               
             },
             serviceType(row, column) {
-                switch (row.service_type) {
-                    case '0':
-                        return '安装';
-                        break;
-                    case '1':
-                        return '售后';
-                        break;
-                    default:
-                        return '未知实施类型';
-                }
+                return serviceTypeFormatter(row.service_type);
             },
             serviceTypeFilterTag(value, row) {
                 return row.service_type === value;
@@ -204,15 +239,10 @@
             handleEdit(index, row) {
                 this.idx = index;
                 const item = this.tableSetting.tableData[index];
-                this.editForm = {
-                    staff_realname: item.staff_realname,
-                    staff_name: item.staff_name,
-                    staff_pwd: item.staff_pwd,
-                    role_name: item.role_name
-                }
+                this.editForm = Object.assign({},this.editForm,item);
                 this.status.editVisible = true;
             },
-            /*handleDelete(index, row) {
+            handleDelete(index, row) {
                 this.idx = index;
                 this.status.delVisible = true;
             },
@@ -227,7 +257,7 @@
                 this.tableSetting.tableData.splice(this.idx, 1);
                 this.$message.success('删除成功');
                 this.status.delVisible = false;
-            }*/
+            }
         }
     }
 
@@ -257,10 +287,13 @@
     .red{
         color: #ff0000;
     }
-    .el-table .warning-row {
-        background: oldlace;
+
+</style>
+<style>
+    .el-popover {
+        background: #ffec0d;
     }
-    .el-table .success-row {
-        background: #f0f9eb;
+    .current-row > td {
+       background: rgba(0, 158, 250, 0.219) !important;
     }
 </style>

@@ -35,7 +35,7 @@
                         <el-col :span="24">
                             <el-form-item label="实施类型" prop="service_type">
                                 <el-select v-model="form.service_type" placeholder="选择实施类型">
-                                    <el-option v-for="item in service_type" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                    <el-option v-for="item in serviceTypeOpt" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -62,7 +62,7 @@
                     <el-row>
                         <el-col :span="24" style="text-align:center" >
                             <el-form-item size="large" >
-                                <el-button type="primary" @click="onSubmit('createService')":loading="submitBottom.isLoading">{{ submitBottom.text }}</el-button>
+                                <el-button type="primary" @click="onSubmit":loading="submitBottom.isLoading">{{ submitBottom.text }}</el-button>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -74,19 +74,11 @@
 </template>
 
 <script>
+    import { serviceTypeOptions } from '@/until/options';
+    import { serviceTabRules } from '@/until/rules';
     export default {
         data(){
             return {
-                service_type:[
-                    {
-                        value:'0',
-                        label:'安装'
-                    },
-                    {
-                        value:'1',
-                        label:'售后'
-                    }
-                ],
                 cusName:[
                     {
                         value: '1',
@@ -156,32 +148,24 @@
                     resource: '小天才',
                     desc: '',
                     options: []
-                },
-                rules:{
-                    cus_id:[
-                        { required: true, message: '请选择客户名称', trigger: 'change' }
-                    ],
-                    contract_id:[
-                        { required: true, message: '请选择合同编号', trigger: 'change' }
-                    ],
-                    service_type:[
-                        { required: true, message: '请选择合同编号', trigger: 'change' }
-                    ],
-                    service_begin_date:[
-                        { type: 'date', required: true, message: '请选择服务开始日期', trigger: ['blur', 'change']  }
-                    ],
-                    service_end_date:[
-                        { type: 'date', required: true, message: '请选择服务结束日期', trigger: ['blur', 'change']  }
-                    ],
-                    contract_remark:[
-                        { required: true, message: '请填写服务内容', trigger: 'blur' }
-                    ]
                 }
             }
         },
+        created(){
+            //this.serviceTypeOpt = serviceTypeOptions;
+            //this.rules = serviceTabRules;
+        },
+        computed:{
+            serviceTypeOpt(){
+                return serviceTypeOptions;
+            },
+            rules(){
+                return serviceTabRules;
+            }
+        },
         methods: {
-            onSubmit(formName) {
-                this.$refs[formName].validate((valid) => {
+            onSubmit() {
+                this.$refs['createService'].validate((valid) => {
                     if (valid) {
                         this.submitBottom.text  = "提交中";
                         this.submitBottom.isLoading = true;

@@ -9,39 +9,57 @@
         <div class="container">
             <div class="form-box">
                 <el-form ref="createEngr" :model="form" label-width="120px" :rules="rules" status-icon>
-                    <el-form-item label="管理员姓名" prop="staff_realname">
-                        <el-input v-model.trim="form.staff_realname"></el-input>
-                    </el-form-item>
-                    <el-form-item label="登录名称" prop="staff_name">
-                        <el-input v-model.trim="form.staff_name"></el-input>
-                    </el-form-item>
-                    <el-form-item label="登录密码" prop="staff_pwd">
-                        <el-input v-model.trim="form.staff_pwd"></el-input>
-                    </el-form-item>
-                    <el-form-item label="确认密码" prop="confirm_pwd">
-                        <el-input v-model.trim="form.confirm_pwd"></el-input>
-                    </el-form-item>
-                    <el-form-item label="请选择权限" prop="role_name">
-                        <el-select v-model.trim="form.role_name" placeholder="请选择权限分组">
-                            <el-option v-for="item in authority" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item label="请选择权限" prop="role_name">
-                        <el-select v-model.trim="form.role_name" placeholder="请选择权限分组">
-                            <el-option v-for="item in authority" :key="item.value" :label="item.label" :value="item.value"></el-option>
-                        </el-select>
-                    </el-form-item>
-                    <el-form-item  size="large">
-                        <el-button type="primary" @click="onSubmit('createEngr')" :Loading="submitBottom.isLoading">{{submitBottom.text}}</el-button>
-                    </el-form-item>
+                    <el-row>
+                        <el-col :span="12">
+                            <el-form-item label="管理员姓名" prop="staff_realname">
+                                <el-input v-model.trim="form.staff_realname" maxlength="10" show-word-limit></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="12">
+                            <el-form-item label="登录名称" prop="staff_name">
+                                <el-input v-model.trim="form.staff_name" maxlength="10" show-word-limit></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="12">
+                            <el-form-item label="登录密码" prop="staff_pwd">
+                                <el-input v-model.trim="form.staff_pwd" maxlength="12" show-word-limit></el-input>
+                            </el-form-item>
+                        </el-col>
+                         <el-col :span="12">
+                            <el-form-item label="确认密码" prop="confirm_pwd">
+                                <el-input v-model.trim="form.confirm_pwd" maxlength="12" show-word-limit></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="12">
+                            <el-form-item label="请选择权限" prop="role_name">
+                                <el-select v-model.trim="form.role_name" placeholder="请选择权限分组">
+                                    <el-option v-for="item in authorityType" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                    <el-row>
+                        <el-col :span="12">
+                            <el-form-item  size="large">
+                                <el-button type="primary" @click="onSubmit()" :Loading="submitBottom.isLoading">{{submitBottom.text}}</el-button>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>                    
                 </el-form>
             </div>
         </div>
-
     </div>
 </template>
 
 <script>
+    import { authorityTypeOptions } from '@/until/options';
+    import { engrTabRules } from '@/until/rules';
     export default {
         data(){
             return {
@@ -49,35 +67,10 @@
                     text:'提交',
                     isLoading:false
                 },
-                authority:[
-                    {
-                        value:'100',
-                        label:'管理员'
-                    },
-                    {
-                        value:'200',
-                        label:'财务人员'
-                    },
-                    {
-                        value:'300',
-                        label:'实施员'
-                    }
-                ],
-                rules:{
-                    staff_realname:[
-                        { required: true, message: '请输入管理员名称', trigger: 'blur' }
-                    ],
-                    staff_name:[
-                        { required: true, message: '请输入管理员登录名称', trigger: 'blur' }
-                    ],
-                    staff_pwd:[
-                        { required: true, validator: this.checkPass, trigger: 'blur' }
-                    ],
+                defaultRules:{
                     confirm_pwd:[
-                        { required: true, validator: this.checkConfirmPass, trigger: 'blur' }
-                    ],
-                    role_name:[
-                        { required: true, message: '请选择管理员权限', trigger: 'blur' }
+                        { required: true, message: '请确认密码' },
+                        { validator: this.checkConfirmPass, trigger: 'blur' }
                     ]
                 },
                 form: {
@@ -89,9 +82,22 @@
                 }
             }
         },
+        created(){
+            //this.authorityType = authorityTypeOptions;
+            //this.rules = Object.assign({},this.rules,engrTabRules);
+        },
+        computed:{
+            authorityType(){
+                return authorityTypeOptions;
+            },
+            rules(){
+                console.dir(Object.assign({},this.defaultRules,engrTabRules));
+                return Object.assign({},this.defaultRules,engrTabRules);
+            }
+        },
         methods: {
-            onSubmit(formName) {
-                this.$refs[formName].validate((valid) => {
+            onSubmit() {
+                this.$refs['createEngr'].validate((valid) => {
                     if (valid) {
                         this.submitBottom.text  = "提交中";
                         this.submitBottom.isLoading = true;
@@ -101,15 +107,6 @@
                         return false;
                     }
                 })
-            },
-            checkPass(rule, value, callback){
-                if (!value) {
-                    return callback(new Error('请输入管理员登录密码'));
-                }
-                if(!(/^[a-zA-Z0-9]+$/.test(value))){
-                    return callback(new Error('登录密码不能有特殊字符!'));
-                }
-                callback();
             },
             checkConfirmPass(rule, value, callback){
                 if (!value) {
@@ -123,7 +120,7 @@
         }
     }
 </script>
-<style type="text/css">
+<style scoped>
     .form-box{
         margin:0 auto;
     }

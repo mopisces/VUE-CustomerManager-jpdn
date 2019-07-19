@@ -15,11 +15,11 @@
                 <el-button type="primary" icon="search" @click="search">搜索</el-button>
             </div>
             <el-table :data="tableSetting.tableData" border class="table" ref="engrManageTab"  style="width:100%;" :highlight-current-row="status.highlight"  row-key="id" >
-                <el-table-column prop="staff_realname" label="管理员姓名"  width="235"></el-table-column>
-                <el-table-column prop="staff_name" label="登录名称"  width="235"></el-table-column>
-                <el-table-column prop="staff_pwd" label="登录密码"  width="235"></el-table-column>
-                <el-table-column prop="role_name" label="权限分组"  width="235" :formatter="formatter" :filters="tableSetting.filters" :filter-method="filterTag" filter-placement="bottom-end"></el-table-column>
-                <el-table-column align="center" label="操作">
+                <el-table-column prop="staff_realname" label="管理员姓名"  width="150" align="center"></el-table-column>
+                <el-table-column prop="staff_name" label="登录名称"  width="235" align="center"></el-table-column>
+                <el-table-column prop="staff_pwd" label="登录密码"  width="250" align="center"></el-table-column>
+                <el-table-column prop="role_name" label="权限分组" width="250" :formatter="formatter" :filters="roleType" :filter-method="filterTag" filter-placement="bottom-end" align="center"></el-table-column>
+                <el-table-column align="center" label="操作" width="200" >
                     <template slot-scope="scope">
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
                         <el-button type="text" icon="el-icon-delete" class="red" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
@@ -37,14 +37,14 @@
             <el-form  ref="editForm" :model="editForm" label-width="100px" :rules="rules">
                 <el-row>
                     <el-col :span="15">
-                        <el-form-item label="管理员姓名">
+                        <el-form-item label="管理员姓名" prop="staff_realname">
                             <el-input v-model.trim="editForm.staff_realname" maxlength="10" show-word-limit></el-input>
                         </el-form-item>       
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="15">
-                        <el-form-item label="登录名称">
+                        <el-form-item label="登录名称" prop="staff_name">
                             <el-input v-model.trim="editForm.staff_name"></el-input>
                         </el-form-item>       
                     </el-col>
@@ -67,7 +67,7 @@
                     <el-col :span="15">
                         <el-form-item label="请选择权限" prop="role_name">
                             <el-select v-model.trim="editForm.role_name" placeholder="请选择权限分组">
-                                <el-option v-for="item in editSetting.authority" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                <el-option v-for="item in authorityTypeOpt" :key="item.value" :label="item.label" :value="item.value"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -81,7 +81,7 @@
         </el-dialog>
 
         <!-- 删除提示框 -->
-       <el-dialog title="提示" :visible.sync="status.delVisible" width="300px" center>
+        <el-dialog title="提示" :visible.sync="status.delVisible" width="300px" center>
             <div class="del-dialog-cnt">删除不可恢复，是否确定删除？</div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="status.delVisible = false">取 消</el-button>
@@ -92,6 +92,10 @@
 </template>
 
 <script>
+    import { roleTypeFilters } from '@/until/filters';
+    import { authorityTypeOptions } from '@/until/options';
+    import { roleTypeFormatter } from '@/until/formatter';
+    import { engrTabRules } from '@/until/rules';
     export default {
         data() {
             return {
@@ -116,11 +120,6 @@
                             role_name:'300'
                         },
                     ],
-                    filters:[
-                        { text: '管理员', value: '100' }, 
-                        { text: '财务人员', value: '200' },
-                        { text: '实施员', value: '300' }
-                    ],
                     curPage: 1,
                     totalPage:100,
                 },
@@ -141,20 +140,6 @@
                     ]
                 },
                 editSetting:{
-                    authority:[
-                        {
-                            value:'100',
-                            label:'管理员'
-                        },
-                        {
-                            value:'200',
-                            label:'财务人员'
-                        },
-                        {
-                            value:'300',
-                            label:'实施员'
-                        }
-                    ],
                     showConfirmInput:false
                 },
                 editForm: {
@@ -171,34 +156,35 @@
                     delVisible: false,
                 },
                 idx: -1,//选中行的索引
-                rules:{
-                    staff_pwd:[
-                        { validator: this.checkPass, trigger: 'blur' }
-                    ],
+                defaultRules:{
                     confirm_pwd:[
+                        { required: true, message: '请确认密码' },
                         { validator: this.checkConfirmPass, trigger: 'blur' }
                     ],
                 }
             }
         },
         created() {
+            //this.rules = Object.assign({},this.rules,engrTabRules);
             this.getData();
         },
-        methods: {
-            checkPass(rule, value, callback){
-                if (!value) {
-                    return callback(new Error('请输入管理员登录密码'));
-                }
-                if(!(/^[a-zA-Z0-9]+$/.test(value))){
-                    return callback(new Error('登录密码不能有特殊字符!'));
-                }
-                callback();
+        computed:{
+            roleType(){
+                return roleTypeFilters;
             },
+            authorityTypeOpt(){
+                return authorityTypeOptions;
+            },
+            rules(){
+                return Object.assign({},this.defaultRules,engrTabRules);
+            }
+        },
+        methods: {
             checkConfirmPass(rule, value, callback){
                 if (!value) {
                     return callback(new Error('请再次输入密码'));
                 }
-                if(value !== this.form.staff_pwd){
+                if(value !== this.editForm.staff_pwd){
                     return callback(new Error('两次输入密码不一致!'));
                 }
                 callback();
@@ -209,36 +195,11 @@
                 this.getData();
             },
             // 获取 easy-mock 的模拟数据
-            getData() {
-                // 开发环境使用 easy-mock 数据，正式环境使用 json 文件
-               /* if (process.env.NODE_ENV === 'development') {
-                    this.url = './static/vuetable.json';
-                };
-                
-                this.$axios.get(this.url, {
-                    page: this.cur_page
-                }).then((res) => {
-                    this.tableData = res.data.list;
-                })*/
-            },
-            search() {
-                //this.is_search = true;
-            },
+            getData() {},
+            // 搜索
+            search() {},
             formatter(row, column) {
-                switch (row.role_name) {
-                    case '100':
-                        return '管理员';
-                        break;
-                    case '200':
-                        return '财务人员';
-                        break;
-                    case '300':
-                        return '实施员';
-                        break;
-                    default:
-                        return '未知权限分组';
-                }
-                return row.role_name;
+                return roleTypeFormatter(row.role_name);
             },
             filterTag(value, row) {
                 return row.role_name === value;
@@ -308,10 +269,9 @@
     .red{
         color: #ff0000;
     }
-    .el-table .warning-row {
-        background: oldlace;
-    }
-    .el-table .success-row {
-        background: #f0f9eb;
+</style>
+<style>
+    .current-row > td {
+       background: rgba(0, 158, 250, 0.219) !important;
     }
 </style>

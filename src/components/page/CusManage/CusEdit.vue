@@ -57,7 +57,7 @@
                         <el-col :span="12">
                             <el-form-item label="角色权限" prop="role_name">
                                 <el-select v-model="form.role_name" placeholder="请选择权限分组">
-                                    <el-option v-for="item in authority" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                    <el-option v-for="item in authorityTypeOpt" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -94,7 +94,9 @@
                         </el-col>
                         <el-col :span="12">
                             <el-form-item label="客户端版本" prop="client_version">
-                                <el-input v-model.trim="form.client_version" placeholder="请输入客户端版本" maxlength="10" show-word-limit></el-input>
+                                <el-select v-model="form.client_version" placeholder="请选择权限分组">
+                                    <el-option v-for="item in clientVersionOpt" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                </el-select>
                             </el-form-item>
                         </el-col>   
                     </el-row>
@@ -123,7 +125,7 @@
                         <el-col :span="12">
                             <el-form-item label="缴费状态" required>
                                 <el-select v-model="form.cus_invstate" placeholder="请选择缴费状态">
-                                    <el-option v-for="item in payment" :key="item.value" :label="item.label" :value="item.value"></el-option>
+                                    <el-option v-for="item in paymentTypeOpt" :key="item.value" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -171,7 +173,7 @@
                     <el-row>
                         <el-col :span="24" style="text-align:center" >
                             <el-form-item size="large" >
-                                <el-button type="primary" @click="onSubmit('createCus')":loading="submitBottom.isLoading">{{ submitBottom.text }}</el-button>
+                                <el-button type="primary" @click="onSubmit":loading="submitBottom.isLoading">{{ submitBottom.text }}</el-button>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -184,6 +186,8 @@
 
 <script>
     import { regionData } from 'element-china-area-data';
+    import { cusTabRules } from '@/until/rules';
+    import { authorityTypeOptions, paymentTypeOptions, clientVersionOptions } from '@/until/options';
     export default {
         data(){
             return {
@@ -192,32 +196,6 @@
                     isLoading:false
                 },
                 regionData: regionData,
-                selectedOptions: [],
-                authority:[
-                    {
-                        value:'100',
-                        label:'管理员'
-                    },
-                    {
-                        value:'200',
-                        label:'财务人员'
-                    },
-                    {
-                        value:'300',
-                        label:'实施员'
-                    },
-                ],
-                payment:[
-                    {
-                        value:'0',
-                        label:'欠费'
-                    },
-                    {
-                        value:'1',
-                        label:'已缴费'
-                    }
-                ],
-                
                 form: {
                     propose_cus:'天津某公司',
                     propose_cus_abbr:'CQYL',
@@ -232,7 +210,7 @@
                     server_ip:'127.0.0.1',
                     server_pwd:'123456',
                     db_pwd:'123456',
-                    client_version:'01',
+                    client_version:'V2',
                     cus_area: ['120000','120100','120101'],
                     cus_address:'某某某某大街99999号',
                     cus_invstate:'1',
@@ -242,64 +220,28 @@
                     sun_logpwd:'1234567890'
                 },
                 
-                rules:{
-                    propose_cus:[
-                        { required: true, message: '请输入客户名称', trigger: 'blur' }
-                    ],
-                    propose_cus_abbr:[
-                        { required: true, validator: this.checkAbbr, trigger: 'blur' }
-                    ],
-                    contact_person:[
-                        { required: true, message: '请输入联系人', trigger: 'blur' }
-                    ],
-                    contact_tel_no:[
-                        { required: true, validator: this.checkPhone, trigger: 'blur' }
-                    ],
-                    role_name:[
-                        { required: true, message: '请选择用户权限', trigger: 'blur' }
-                    ],
-                    contract_date:[
-                        {  required: true, message: '请选择合同日期', trigger: ['blur', 'change'] }
-                    ],
-                    finish_date:[
-                        {  required: true, message: '请选择完工日期', trigger: ['blur', 'change'] }
-                    ],
-                    server_ip:[
-                        { required: true, validator: this.checkIP, trigger: 'blur' }
-                    ],
-                    server_pwd:[
-                        { required: true, message: '请输入服务器密码', trigger: 'blur' }
-                    ],
-                    db_pwd:[
-                        { required: true, message: '请输入数据库密码', trigger: 'blur' }
-                    ],
-                    client_version:[
-                        { required: true, message: '请输入客户端版本号', trigger: 'blur' }
-                    ],
-                    cus_area:[
-                        { required: true, message: '请选择区域', trigger: 'change' }
-                    ],
-                    cus_address:[
-                        { required: true, message: '请输入详细地址', trigger: 'blur' }
-                    ],
-                    serve_amt:[
-                        { required: true, validator: this.checkNum, trigger: 'blur' }
-                    ],
-                    nextinv_date:[
-                        { required: true, message: '请选择缴费日期', trigger: ['blur', 'change'] }
-                    ],
-                    sun_logno:[
-                        { required: true, message: '请输入向日葵识别码', trigger: 'blur' }
-                    ],
-                    sun_logpwd:[
-                        { required: true, message: '请输入向日葵验证码', trigger: 'blur' }
-                    ]
-                }
+            }
+        },
+        created(){
+            
+        },
+        computed:{
+            authorityTypeOpt(){
+                return authorityTypeOptions;
+            },
+            paymentTypeOpt(){
+                return paymentTypeOptions;
+            },
+            clientVersionOpt(){
+                return clientVersionOptions;
+            },
+            rules(){
+                return cusTabRules;
             }
         },
         methods: {
-            onSubmit(formName) {
-                this.$refs[formName].validate((valid) => {
+            onSubmit() {
+                this.$refs['createCus'].validate((valid) => {
                     if (valid) {
                         this.submitBottom.text  = "提交中";
                         this.submitBottom.isLoading = true;
@@ -309,48 +251,11 @@
                         return false;
                     }
                 });
-                //this.$message.success('提交成功！');
             },
             handleChange(value){
                 console.dir(value);
                 console.dir(this.form.cus_area);
-            },
-            checkPhone(rule, value, callback){
-                if (!value) {
-                    return callback(new Error('请输入联系电话'));
-                }
-                if(!(/^1[3456789]\d{9}$/.test(value))){ 
-                    return callback(new Error('请输入正确的联系电话'));
-                }
-                callback();
-            },
-            checkIP(rule, value, callback){
-                if(!value){
-                    return callback(new Error('请输入数据库IP地址'));
-                }
-                if(!(/^(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])\.(\d{1,2}|1\d\d|2[0-4]\d|25[0-5])$/).test(value)){
-                    return callback(new Error('请输入正确的IP地址'));
-                }
-                callback();
-            },
-            checkAbbr(rule, value, callback){
-                if(!value){
-                    return callback(new Error('请输入客户英文缩写'));
-                }
-                if(!(/^[a-zA-Z]+$/).test(value)){
-                    return callback(new Error('请输入正确的客户英文缩写'));
-                }
-                callback();
-            },
-            checkNum(rule, value, callback){
-                if(!value){
-                    return callback(new Error('请输入金额'));
-                }
-                if(!(/^[0-9]+$/).test(value)){
-                    return callback(new Error('金额必须为数字'));
-                }
-                callback();
-            },
+            }
         }
     }
 </script>

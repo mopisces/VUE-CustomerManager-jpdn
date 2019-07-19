@@ -1,7 +1,7 @@
 <template>
     <div class="table">
         <div class="crumbs">
-            <el-breadcrumb separator="/">
+            <el-breadcrumb separator="/" >
                 <el-breadcrumb-item>合同管理</el-breadcrumb-item>
                 <el-breadcrumb-item>合同审核</el-breadcrumb-item>
             </el-breadcrumb>
@@ -15,17 +15,17 @@
                 <el-button type="primary" icon="search" @click="search">搜索</el-button>
             </div>
             <el-table :data="tableSetting.tableData" border class="table" ref="cusManageTab"  style="width:100%;" :highlight-current-row="status.highlight" >
-                <el-table-column prop="contract_id" label="合同编号"  width="230" fixed></el-table-column>
-                <el-table-column prop="propose_cus" label="客户名称"  width="150" fixed></el-table-column>
-                <el-table-column prop="contract_type" label="合同类型"  width="150"  :formatter="contractTypeFormatter" :filters="tableSetting.contractTypeFilters" :filter-method="contractTypeFilterTag" filter-placement="bottom-end"></el-table-column>
-                <el-table-column prop="contract_on_date" label="合同签订日期"  width="150"></el-table-column>
-                <el-table-column prop="contract_amt" label="合同金额"  width="150"></el-table-column>
-                <el-table-column prop="contract_agree_amt" label="合同约定金额"  width="150"></el-table-column>
-                <el-table-column prop="contract_begin_date" label="合同开始日期"  width="150"></el-table-column>
-                <el-table-column prop="contract_end_date" label="合同结束日期"  width="150"></el-table-column>
-                <el-table-column prop="contract_ispay" label="是否付清"  width="150" :formatter="contractIspayFormatter" ></el-table-column>
-                <el-table-column prop="contract_isinv" label="是否开票"  width="150" :formatter="contractIsinvFormatter"></el-table-column>
-                <el-table-column prop="contract_remark" label="合同备注"  width="150"></el-table-column>
+                <el-table-column prop="contract_id" label="合同编号"  width="230" fixed  align="center"></el-table-column>
+                <el-table-column prop="propose_cus" label="客户名称"  width="150" fixed  align="center"></el-table-column>
+                <el-table-column prop="contract_type" label="合同类型"  width="150"  :formatter="contractTypeFormatter" :filters="tableSetting.contractTypeFilters" :filter-method="contractTypeFilterTag" filter-placement="bottom-end"  align="center"></el-table-column>
+                <el-table-column prop="contract_on_date" label="合同签订日期"  width="150" sortable  align="center"></el-table-column>
+                <el-table-column prop="contract_amt" label="合同金额"  width="150"  align="center"></el-table-column>
+                <el-table-column prop="contract_agree_amt" label="合同约定金额"  width="150"  align="center"></el-table-column>
+                <el-table-column prop="contract_begin_date" label="合同开始日期"  width="150" sortable  align="center"></el-table-column>
+                <el-table-column prop="contract_end_date" label="合同结束日期"  width="150" sortable  align="center"></el-table-column>
+                <el-table-column prop="contract_ispay" label="是否付清"  width="150" :formatter="contractIspayFormatter"  align="center" ></el-table-column>
+                <el-table-column prop="contract_isinv" label="是否开票"  width="150" :formatter="contractIsinvFormatter"  align="center"></el-table-column>
+                <el-table-column prop="contract_remark" label="合同备注"  width="150"  align="center"></el-table-column>
                 <el-table-column align="center" label="操作" fixed="right">
                     <template slot-scope="scope">
                         <el-button type="danger"  @click="handleEdit(scope.$index, scope.row)">审核</el-button>
@@ -49,7 +49,7 @@
                     <el-col :span="12">
                         <el-form-item label="合同类型">
                             <el-select v-model="editForm.contract_type" disabled placeholder="请选择">
-                                <el-option v-for="item in editSetting.options" :key="item.value" :label="item.label" :value="item.value">
+                                <el-option v-for="item in editSetting.contractTypeOpt" :key="item.value" :label="item.label" :value="item.value">
                                 </el-option>
                             </el-select>
                         </el-form-item>      
@@ -107,6 +107,7 @@
     import store from '@/store/store';
     import { contractType,contractIspay,contractIsinv  } from '@/until/formatter';
     import { contractTypeFilters } from '@/until/filters';
+    import { contractTypeOptions } from '@/until/options';
     export default {
         data() {
             return {
@@ -163,24 +164,7 @@
                     ]
                 },
                 editSetting:{
-                    options:[
-                        {
-                            label:'销售合同',
-                            value:'0'
-                        },
-                        {
-                            label:'维护合同',
-                            value:'1'
-                        },
-                        {
-                            label:'增值合同',
-                            value:'2'
-                        },
-                        {
-                            label:'webapp合同',
-                            value:'3'
-                        },
-                    ], 
+                    contractTypeOpt:[], 
                 },
                 editForm: {
                     contract_id: '',
@@ -202,6 +186,7 @@
         },
         created() {
             this.tableSetting.contractTypeFilters = contractTypeFilters;
+            this.editSetting.contractTypeOpt = contractTypeOptions
             this.getData();
         },
         methods: {

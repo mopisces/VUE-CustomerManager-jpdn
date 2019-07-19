@@ -40,3 +40,42 @@ export function contractIsinv( isinv ){
             return '未知开票状态';
     }
 };
+export function roleTypeFormatter( type ){
+    switch (type) {
+        case '100':
+            return '管理员';
+            break;
+        case '200':
+            return '财务人员';
+            break;
+        case '300':
+            return '实施员';
+            break;
+        default:
+            return '未知权限分组';
+    }
+};
+export function invStateFormatter( state ){
+    switch (state) {
+        case '0':
+            return '欠费';
+            break;
+        case '1':
+            return '已缴费';
+            break;
+        default:
+            return '未知缴费状态';
+    }
+};
+export function serviceTypeFormatter( type ){
+    switch (type) {
+        case '0':
+            return '安装';
+            break;
+        case '1':
+            return '售后';
+            break;
+        default:
+            return '未知实施类型';
+    }
+}

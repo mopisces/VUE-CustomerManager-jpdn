@@ -20,7 +20,7 @@
                        <el-col :span="24">
                             <el-form-item label="合同类型" prop="contract_id">
                                 <el-select v-model="form.contract_id" placeholder="选择合同类型">
-                                    <el-option v-for="(item,index) in contractType " :key="`opt_${index}`" :label="item.label" :value="item.value"></el-option>
+                                    <el-option v-for="(item,index) in contractTypeOpt " :key="`opt_${index}`" :label="item.label" :value="item.value"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -28,7 +28,7 @@
                     <el-row>
                         <el-col :span="24">
                             <el-form-item label="签订日期" prop="contract_on_date">
-                                <el-date-picker type="date" placeholder="选择签订日期" v-model="form.contract_on_date" style="width: 100%;" ></el-date-picker>
+                                <el-date-picker type="date" placeholder="选择签订日期" v-model="form.contract_on_date" style="width: 100%;"  value-format="yyyy-MM-dd" format="yyyy 年 MM 月 dd 日"></el-date-picker>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -47,12 +47,12 @@
                     <el-row>
                         <el-col :span="12">
                             <el-form-item label="合同开始日期" prop="contract_begin_date">
-                                <el-date-picker type="date" placeholder="选择开始日期" v-model="form.contract_begin_date" style="width: 100%;"></el-date-picker>
+                                <el-date-picker type="date" placeholder="选择开始日期" v-model="form.contract_begin_date" style="width: 100%;"  value-format="yyyy-MM-dd" format="yyyy 年 MM 月 dd 日"></el-date-picker>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
                             <el-form-item label="合同结束日期" prop="contract_end_date">
-                                <el-date-picker type="date" placeholder="选择结束日期" v-model="form.contract_end_date" style="width: 100%;"></el-date-picker>
+                                <el-date-picker type="date" placeholder="选择结束日期" v-model="form.contract_end_date" style="width: 100%;"  value-format="yyyy-MM-dd" format="yyyy 年 MM 月 dd 日"></el-date-picker>
                             </el-form-item>
                         </el-col>   
                     </el-row>
@@ -77,7 +77,8 @@
 </template>
 
 <script>
-    let id = 0;
+    import { contractTypeOptions } from '@/until/options';
+    import { contractTabRules } from '@/until/rules';
     export default {
         data(){
             return {
@@ -95,24 +96,6 @@
                         label: '上海' 
                     },
                 ],
-                contractType:[
-                    {
-                        label:'销售合同',
-                        value:'0'
-                    },
-                    {
-                        label:'维护合同',
-                        value:'1'
-                    },
-                    {
-                        label:'增值合同',
-                        value:'2'
-                    },
-                    {
-                        label:'webapp合同',
-                        value:'3'
-                    }
-                ],
                 submitBottom:{
                     text:'提交',
                     isLoading:false
@@ -126,29 +109,16 @@
                     contract_begin_date:'',
                     contract_end_date:''
                 },
-                rules:{
-                    cus_id:[
-                        { required: true, message: '请选择客户名称', trigger: 'change' }
-                    ],
-                    contract_id:[
-                        { required: true, message: '请选择合同编号', trigger: 'change' }
-                    ],
-                    contract_on_date:[
-                        { type: 'date', required: true, message: '请选择签订日期', trigger: ['blur', 'change']  }
-                    ],
-                    contract_amt:[
-                        { required: true, validator: this.checkNum , trigger: 'blur'  },
-                    ],
-                    contract_agree_amt:[
-                        { required: true, message: '请输入合同约定金额', trigger: 'blur' },
-                    ],
-                    contract_begin_date:[
-                        { type: 'date', required: true, message: '请选择合同开始日期', trigger: ['blur', 'change'] }
-                    ],
-                    contract_end_date:[
-                        { type: 'date', required: true, message: '请选择合同结束日期', trigger: ['blur', 'change'] }
-                    ],
-                }
+            }
+        },
+        created(){
+        },
+        computed:{
+            contractTypeOpt(){
+                return contractTypeOptions;
+            },
+            rules(){
+                return contractTabRules;
             }
         },
         methods: {
@@ -166,16 +136,7 @@
             },
             change(value){
                 console.dir(value);
-            },
-            checkNum(rule, value, callback){
-                if(!value){
-                    return callback(new Error('请输入金额'));
-                }
-                if(!(/^[0-9]+$/).test(value)){
-                    return callback(new Error('金额必须为数字'));
-                }
-                callback();
-            },
+            }
         }
     }
 </script>
