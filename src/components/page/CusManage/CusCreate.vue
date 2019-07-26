@@ -1,7 +1,7 @@
 <template>
     <div >
         <div class="crumbs">
-            <el-breadcrumb separator="/">
+            <el-breadcrumb separator-class="el-icon-arrow-right">
                 <el-breadcrumb-item>客户管理</el-breadcrumb-item>
                 <el-breadcrumb-item>添加客户</el-breadcrumb-item>
             </el-breadcrumb>
@@ -35,20 +35,20 @@
                     </el-row>
                     <el-row>
                        <el-col :span="12">
-                            <el-form-item label="QQ号" >
-                                <el-input v-model.trim="form.contact_qq_no" placeholder="请输入QQ号"></el-input>
+                            <el-form-item label="QQ号" prop="contact_qq_no">
+                                <el-input v-model.trim="form.contact_qq_no" placeholder="请输入QQ号" maxlength="11" show-word-limit></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
-                            <el-form-item label="微信号" >
-                                <el-input v-model.trim="form.contact_wx_no" placeholder="请输入微信号"></el-input>
+                            <el-form-item label="微信号" prop="contact_wx_no">
+                                <el-input v-model.trim="form.contact_wx_no" placeholder="请输入微信号" maxlength="20" show-word-limit></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row>
                         <el-col :span="12">
-                            <el-form-item label="传真" >
-                                <el-input v-model.trim="form.contact_subfaxno" placeholder="请输入传真"></el-input>
+                            <el-form-item label="传真" prop="contact_subfaxno">
+                                <el-input v-model.trim="form.contact_subfaxno" placeholder="请输入传真" maxlength="13" show-word-limit></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>

@@ -1,7 +1,7 @@
 <template>
     <div class="table">
         <div class="crumbs">
-            <el-breadcrumb separator="/">
+            <el-breadcrumb separator-class="el-icon-arrow-right">
                 <el-breadcrumb-item>合同管理</el-breadcrumb-item>
                 <el-breadcrumb-item>合同列表</el-breadcrumb-item>
             </el-breadcrumb>
@@ -113,9 +113,9 @@
 <script>
     import store from '@/store/store';
     import { contractTabRules } from '@/until/rules';
-    import { contractType,contractIspay,contractIsinv  } from '@/until/formatter';
     import { contractTypeOptions } from '@/until/options';
-    import { contractTypeFilters,IspayFilters,IsinvFilters } from '@/until/filters';
+    import { contractType, contractIspay, contractIsinv  } from '@/until/formatter';
+    import { contractTypeFilters, IspayFilters, IsinvFilters } from '@/until/filters';
     export default {
         data() {
             return {

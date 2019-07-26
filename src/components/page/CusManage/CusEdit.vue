@@ -1,7 +1,7 @@
 <template>
     <div >
         <div class="crumbs">
-            <el-breadcrumb separator="/">
+            <el-breadcrumb separator-class="el-icon-arrow-right">
                 <el-breadcrumb-item>客户管理</el-breadcrumb-item>
                 <el-breadcrumb-item>客户列表</el-breadcrumb-item>
                 <el-breadcrumb-item>客户编辑</el-breadcrumb-item>
@@ -10,6 +10,13 @@
         <div class="container">
             <div class="form-box">
                 <el-form ref="createCus" :model="form" label-width="120px" :rules="rules">
+                    <el-row>
+                        <el-col :span="12">
+                            <el-form-item label="客户ID" prop="customer_id">
+                                <el-input v-model="form.customer_id" :disabled="true"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
                     <el-row>
                         <el-col :span="12" >
                             <el-form-item label="客户名称" prop="propose_cus">
@@ -36,19 +43,19 @@
                     </el-row>
                     <el-row>
                        <el-col :span="12">
-                            <el-form-item label="QQ号" >
+                            <el-form-item label="QQ号" prop="contact_qq_no">
                                 <el-input v-model.trim="form.contact_qq_no" placeholder="请输入QQ号"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="12">
-                            <el-form-item label="微信号" >
+                            <el-form-item label="微信号" prop="contact_wx_no">
                                 <el-input v-model.trim="form.contact_wx_no" placeholder="请输入微信号"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row>
                         <el-col :span="12">
-                            <el-form-item label="传真" >
+                            <el-form-item label="传真" prop="contact_subfaxno">
                                 <el-input v-model.trim="form.contact_subfaxno" placeholder="请输入传真"></el-input>
                             </el-form-item>
                         </el-col>
@@ -149,6 +156,7 @@
                             </el-form-item>
                         </el-col>
                     </el-row>
+                    
                     <el-row>
                         <el-col :span="24">
                             <el-form-item label="客户备注" >
@@ -170,6 +178,7 @@
                             </el-form-item>
                         </el-col>
                     </el-row>
+                    
                     <el-row>
                         <el-col :span="24" style="text-align:center" >
                             <el-form-item size="large" >
@@ -197,6 +206,7 @@
                 },
                 regionData: regionData,
                 form: {
+                    customer_id:'1',
                     propose_cus:'天津某公司',
                     propose_cus_abbr:'CQYL',
                     contact_person:'陈总',

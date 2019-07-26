@@ -4,7 +4,6 @@ import store from '../store/store.js'
 import router from '../router'
 import md5 from 'js-md5'
 import Vue from 'vue'
-import  { ToastPlugin } from 'vux'
 import base from './api/base';
 
 

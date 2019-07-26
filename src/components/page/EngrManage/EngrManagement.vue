@@ -1,7 +1,7 @@
 <template>
     <div class="table">
         <div class="crumbs">
-            <el-breadcrumb separator="/">
+            <el-breadcrumb separator-class="el-icon-arrow-right">
                 <el-breadcrumb-item>实施员管理</el-breadcrumb-item>
                 <el-breadcrumb-item>实施员列表</el-breadcrumb-item>
             </el-breadcrumb>
@@ -45,21 +45,21 @@
                 <el-row>
                     <el-col :span="15">
                         <el-form-item label="登录名称" prop="staff_name">
-                            <el-input v-model.trim="editForm.staff_name"></el-input>
+                            <el-input v-model.trim="editForm.staff_name" maxlength="12" show-word-limit></el-input>
                         </el-form-item>       
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="15">
                         <el-form-item label="登录密码" prop="staff_pwd">
-                            <el-input v-model.trim="editForm.staff_pwd"></el-input>
+                            <el-input v-model.trim="editForm.staff_pwd" maxlength="12" show-word-limit></el-input>
                         </el-form-item>      
                     </el-col>
                 </el-row>
                 <el-row v-if="editSetting.showConfirmInput">
                     <el-col :span="15">
                         <el-form-item label="确认密码" prop="confirm_pwd" > 
-                            <el-input v-model.trim="editForm.confirm_pwd"></el-input>
+                            <el-input v-model.trim="editForm.confirm_pwd" maxlength="12" show-word-limit></el-input>
                         </el-form-item>      
                     </el-col>
                 </el-row>

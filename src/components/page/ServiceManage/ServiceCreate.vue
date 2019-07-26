@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="crumbs">
-            <el-breadcrumb separator="/">
+            <el-breadcrumb separator-class="el-icon-arrow-right">
                 <el-breadcrumb-item>服务单管理</el-breadcrumb-item>
                 <el-breadcrumb-item>新增服务单</el-breadcrumb-item>
             </el-breadcrumb>

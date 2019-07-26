@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="crumbs">
-            <el-breadcrumb separator="/">
+            <el-breadcrumb separator-class="el-icon-arrow-right">
                 <el-breadcrumb-item>管理员</el-breadcrumb-item>
                 <el-breadcrumb-item>添加管理员</el-breadcrumb-item>
             </el-breadcrumb>
@@ -19,7 +19,7 @@
                     <el-row>
                         <el-col :span="12">
                             <el-form-item label="登录名称" prop="staff_name">
-                                <el-input v-model.trim="form.staff_name" maxlength="10" show-word-limit></el-input>
+                                <el-input v-model.trim="form.staff_name" maxlength="12" show-word-limit></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
