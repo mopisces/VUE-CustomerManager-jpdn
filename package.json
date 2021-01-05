@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@handsontable/vue": "^4.0.0",
-    "axios": "^0.15.3",
+    "axios": "^0.21.1",
     "babel-polyfill": "^6.23.0",
     "element-china-area-data": "^4.1.2",
     "element-ui": "^2.10.1",
